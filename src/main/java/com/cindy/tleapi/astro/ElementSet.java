@@ -1,4 +1,7 @@
 package com.cindy.tleapi.astro;
 
-public class ElementSet {
+/**
+ * Base Element Set class
+ */
+public interface ElementSet {
 }

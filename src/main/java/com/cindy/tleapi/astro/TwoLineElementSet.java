@@ -1,6 +1,11 @@
 package com.cindy.tleapi.astro;
 
-public class TwoLineElementSet extends ElementSet {
+import org.apache.commons.lang3.StringUtils;
+
+/**
+ * Base Two Line Element Set class
+ */
+public class TwoLineElementSet implements ElementSet {
 
     private String name;
     private int satelliteNumber;
@@ -12,6 +17,13 @@ public class TwoLineElementSet extends ElementSet {
     private double meanMotionDeriv2;
     private double bstar;
     private int elementSetNum;
+    private Angle inclination;
+    private Angle rightAscension;
+    private double eccentricity;
+    private Angle argumentOfPerigee;
+    private Angle meanAnomaly;
+    private double meanMotion;  // revs/day
+    private int revolutionNum;
 
     // https://www.celestrak.com/NORAD/documentation/tle-fmt.php
     private final static String line00 = "123456789012345678901234567890123456789012345678901234567890123456780";
@@ -28,9 +40,19 @@ public class TwoLineElementSet extends ElementSet {
                              double meanMotionDeriv1,
                              double meanMotionDeriv2,
                              double bstar,
-                             int elementSetNum) {
+                             int elementSetNum,
+                             Angle inclination,
+                             Angle rightAscension,
+                             double eccentricity,
+                             Angle argumentOfPerigee,
+                             Angle meanAnomaly,
+                             double meanMotion,
+                             int revolutionNum) {
+
         this(satelliteNumber, classification, internationalDesignator, epochYear, epochDay,
-                meanMotionDeriv1, meanMotionDeriv2, bstar, elementSetNum);
+                meanMotionDeriv1, meanMotionDeriv2, bstar, elementSetNum,
+                inclination, rightAscension, eccentricity,
+                rightAscension, meanAnomaly, meanMotion, revolutionNum);
         this.name = name;
     }
 
@@ -42,7 +64,14 @@ public class TwoLineElementSet extends ElementSet {
                              double meanMotionDeriv1,
                              double meanMotionDeriv2,
                              double bstar,
-                             int elementSetNum) {
+                             int elementSetNum,
+                             Angle inclination,
+                             Angle rightAscension,
+                             double eccentricity,
+                             Angle argumentOfPerigee,
+                             Angle meanAnomaly,
+                             double meanMotion,
+                             int revolutionNum) {
         this.name = "";
         this.satelliteNumber = satelliteNumber;
         this.classification = classification;
@@ -53,6 +82,13 @@ public class TwoLineElementSet extends ElementSet {
         this.meanMotionDeriv2 = meanMotionDeriv2;
         this.bstar = bstar;
         this.elementSetNum = elementSetNum;
+        this.inclination = inclination;
+        this.rightAscension = rightAscension;
+        this.eccentricity = eccentricity;
+        this.argumentOfPerigee = argumentOfPerigee;
+        this.meanAnomaly = meanAnomaly;
+        this.meanMotion = meanMotion;
+        this.revolutionNum = revolutionNum;
     }
 
     public TwoLineElementSet() {
@@ -131,19 +167,79 @@ public class TwoLineElementSet extends ElementSet {
         this.elementSetNum = elementSetNum;
     }
 
+    public Angle getInclination() {
+        return inclination;
+    }
+
+    public void setInclination(Angle inclination) {
+        this.inclination = inclination;
+    }
+
+    public Angle getRightAscension() {
+        return rightAscension;
+    }
+
+    public void setRightAscension(Angle rightAscension) {
+        this.rightAscension = rightAscension;
+    }
+
+    public double getEccentricity() {
+        return eccentricity;
+    }
+
+    public void setEccentricity(double eccentricity) {
+        this.eccentricity = eccentricity;
+    }
+
+    public Angle getArgumentOfPerigee() {
+        return argumentOfPerigee;
+    }
+
+    public void setArgumentOfPerigee(Angle argumentOfPerigee) {
+        this.argumentOfPerigee = argumentOfPerigee;
+    }
+
+    public Angle getMeanAnomaly() {
+        return meanAnomaly;
+    }
+
+    public void setMeanAnomaly(Angle meanAnomaly) {
+        this.meanAnomaly = meanAnomaly;
+    }
+
+    public double getMeanMotion() {
+        return meanMotion;
+    }
+
+    public void setMeanMotion(double meanMotion) {
+        this.meanMotion = meanMotion;
+    }
+
+    public int getRevolutionNum() {
+        return revolutionNum;
+    }
+
+    public void setRevolutionNum(int revolutionNum) {
+        this.revolutionNum = revolutionNum;
+    }
+
     /**
      * Import from two line ASCII element set
      */
     public void importElset(String line1, String line2) {
+
         parseLine1(line1);
+        parseLine2(line2);
     }
 
     /**
      * Import from three line ASCII element set. Line 1 contains satellite name
      */
     public void importElset(String line1, String line2, String line3) {
+
+        line1 = StringUtils.rightPad(line1, 80, " ");
         name = line1.substring(0, 24);
-        System.out.println("importElset: name = " + name);
+        System.out.println("*** importElset: name = " + name);
         parseLine1(line2);
         parseLine2(line3);
     }
@@ -152,14 +248,8 @@ public class TwoLineElementSet extends ElementSet {
 
         System.out.println("*** parseLine1: line1 = \"" + line1 + "\"");
 
-        String lineNumber = line1.substring(0, 1);
-        System.out.println("*** parseLine1: lineNumber = \"" + lineNumber + "\"");
-        int lineNumberInt = Integer.parseInt(lineNumber);
-
-        String satNumber = line1.substring(2, 7);
-        System.out.println("*** parseLine1: satNumber = \"" + satNumber + "\"");
-        satNumber = satNumber.stripLeading();
-        satelliteNumber = Integer.parseInt(satNumber);
+        parseLineNumber(line1, 1);
+        satelliteNumber = parseSatNo(line1);
 
         classification = line1.substring(7, 8);
         System.out.println("*** parseLine1: classification = \"" + classification + "\"");
@@ -189,6 +279,23 @@ public class TwoLineElementSet extends ElementSet {
         elementSetNum = Integer.parseInt(elementSetNumStr);
     }
 
+    private void parseLineNumber(String line, int expectedLineNumber) {
+
+        String lineNumberStr = line.substring(0, 1);
+        System.out.println("*** parseLine1: lineNumberStr = \"" + lineNumberStr + "\"");
+        int lineNumber = Integer.parseInt(lineNumberStr);
+        System.out.println("*** parseLine1: lineNumber = " + lineNumber);
+
+        // TODO: validate line number
+    }
+
+    private int parseSatNo(String line) {
+
+        String satNumberStr = line.substring(2, 7);
+        System.out.println("*** parseLine1: satNumberStr = \"" + satNumberStr + "\"");
+        satNumberStr = satNumberStr.stripLeading();
+        return Integer.parseInt(satNumberStr);
+    }
     private void parseMeanMotionDeriv2(String line1) {
 
         String meanMotionDeriv2Str = line1.substring(44, 50);
@@ -217,6 +324,30 @@ public class TwoLineElementSet extends ElementSet {
 
     private void parseLine2(String line2) {
         System.out.println("*** parseLine2: line2 = \"" + line2 + "\"");
+
+        parseLineNumber(line2, 2);
+        int satelliteNumber2 = parseSatNo(line2);
+        inclination = parseAngle(line2, 8, 16);
+        rightAscension = parseAngle(line2, 17, 25);
+
+        String eccStr = line2.substring(26, 33);
+        eccStr = "0." + eccStr;
+        eccentricity = Double.parseDouble(eccStr);
+        argumentOfPerigee = parseAngle(line2, 34, 42);
+        meanAnomaly = parseAngle(line2, 43, 51);
+
+        String mmStr = line2.substring(52, 63);
+        meanMotion = Double.parseDouble(mmStr);
+        String revStr = line2.substring(63, 68);
+        revStr = revStr.stripLeading();
+        revolutionNum = Integer.parseInt(revStr);
+    }
+
+    private Angle parseAngle(String line, int start, int end) {
+        String angleStr = line.substring(start, end);
+        System.out.println("*** parseLine2: angleStr = \"" + angleStr + "\"");
+        double angleDeg = Double.parseDouble(angleStr);
+        return new Angle(angleDeg, Angle.AngleUnits.DEGREES);
     }
 
     @Override
@@ -232,6 +363,13 @@ public class TwoLineElementSet extends ElementSet {
                 ", meanMotionDeriv2=" + meanMotionDeriv2 +
                 ", bstar=" + bstar +
                 ", elementSetNum=" + elementSetNum +
+                ", inclination=" + inclination +
+                ", rightAscension=" + rightAscension +
+                ", eccentricity=" + eccentricity +
+                ", argumentOfPerigee=" + argumentOfPerigee +
+                ", meanAnomaly=" + meanAnomaly +
+                ", meanMotion=" + meanMotion +
+                ", revolutionNum=" + revolutionNum +
                 '}';
     }
 }
