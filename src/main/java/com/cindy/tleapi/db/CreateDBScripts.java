@@ -5,6 +5,10 @@ import com.cindy.tleapi.astro.TwoLineElementSet;
 import java.io.*;
 import java.util.Scanner;
 
+/**
+ * This class creates scripts used to connect, create and load
+ * TLE database.
+ */
 public class CreateDBScripts {
 
     private static final String connectFileName = "scripts\\connectDB.sql";
@@ -79,8 +83,23 @@ public class CreateDBScripts {
             pWriter.println("DROP TABLE tledb;");
             pWriter.println("CREATE TABLE tledb");
             pWriter.println("(");
-            pWriter.println("    satno int, ");
-            pWriter.println("    name varchar(30)");
+            pWriter.println("    satelliteNumber int, ");
+            pWriter.println("    name varchar(30),");
+            pWriter.println("    classification varchar(1),");
+            pWriter.println("    internationalDesignator varchar(10),");
+            pWriter.println("    epochYear int,");
+            pWriter.println("    epochDay int,");
+            pWriter.println("    meanMotionDeriv1 double,");
+            pWriter.println("    meanMotionDeriv2 double,");
+            pWriter.println("    bstar double,");
+            pWriter.println("    elementSetNum int,");
+            pWriter.println("    inclination double,");
+            pWriter.println("    rightAscension double,");
+            pWriter.println("    eccentricity double,");
+            pWriter.println("    argumentOfPerigee double,");
+            pWriter.println("    meanAnomaly double,");
+            pWriter.println("    meanMotion double,");
+            pWriter.println("    revolutionNum int");
             pWriter.println(");");
 
             pWriter.close();
@@ -131,8 +150,25 @@ public class CreateDBScripts {
                 TwoLineElementSet elset = new TwoLineElementSet();
                 elset.importElset(line0, line1, line2);
 
-                pWriter.print("(" + elset.getSatelliteNumber() +
-                        ", '" + elset.getName() + "')");
+                pWriter.print("(");
+                pWriter.print(elset.getSatelliteNumber() + ", ");
+                pWriter.print("'" + elset.getName() + "', ");
+                pWriter.print("'" + elset.getClassification() + "', ");
+                pWriter.print("'" + elset.getInternationalDesignator() + "', ");
+                pWriter.print(elset.getEpochYear() + ", ");
+                pWriter.print(elset.getEpochDay() + ", ");
+                pWriter.print(elset.getMeanMotionDeriv1() + ", ");
+                pWriter.print(elset.getMeanMotionDeriv2() + ", ");
+                pWriter.print(elset.getBstar() + ", ");
+                pWriter.print(elset.getElementSetNum() + ", ");
+                pWriter.print(elset.getInclination().getDegrees() + ", ");
+                pWriter.print(elset.getRightAscension().getDegrees() + ", ");
+                pWriter.print(elset.getEccentricity() + ", ");
+                pWriter.print(elset.getArgumentOfPerigee().getDegrees() + ", ");
+                pWriter.print(elset.getMeanAnomaly().getDegrees() + ", ");
+                pWriter.print(elset.getMeanMotion() + ", ");
+                pWriter.print(elset.getRevolutionNum());
+                pWriter.print(")");
 
                 if (sc.hasNextLine()) {
                     pWriter.println(", ");
