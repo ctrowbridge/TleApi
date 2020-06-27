@@ -246,36 +246,36 @@ public class TwoLineElementSet implements ElementSet {
 
     private void parseLine1(String line1) {
 
-        System.out.println("*** parseLine1: line1 = \"" + line1 + "\"");
+        //System.out.println("*** parseLine1: line1 = \"" + line1 + "\"");
 
         parseLineNumber(line1, 1);
         satelliteNumber = parseSatNo(line1);
 
         classification = line1.substring(7, 8);
-        System.out.println("*** parseLine1: classification = \"" + classification + "\"");
+        //System.out.println("*** parseLine1: classification = \"" + classification + "\"");
 
         internationalDesignator = line1.substring(9, 17);
-        System.out.println("*** parseLine1: internationalDesignator = \"" + internationalDesignator + "\"");
+        //System.out.println("*** parseLine1: internationalDesignator = \"" + internationalDesignator + "\"");
 
         String epochYearStr = line1.substring(18, 20);
-        System.out.println("*** parseLine1: epochYearStr = \"" + epochYearStr + "\"");
+        //System.out.println("*** parseLine1: epochYearStr = \"" + epochYearStr + "\"");
         epochYear = Integer.parseInt(epochYearStr);
 
         String epochDayStr = line1.substring(20, 32);
-        System.out.println("*** parseLine1: epochDayStr = \"" + epochDayStr + "\"");
+        //System.out.println("*** parseLine1: epochDayStr = \"" + epochDayStr + "\"");
         epochDay = Double.parseDouble(epochDayStr);
 
         String meanMotionDeriv1Str = line1.substring(33, 43);
-        System.out.println("*** parseLine1: meanMotionDeriv1Str = \"" + meanMotionDeriv1Str + "\"");
+        //System.out.println("*** parseLine1: meanMotionDeriv1Str = \"" + meanMotionDeriv1Str + "\"");
         meanMotionDeriv1 = Double.parseDouble(meanMotionDeriv1Str);
 
         parseMeanMotionDeriv2(line1);
         parseBstar(line1);
 
         String elementSetNumStr = line1.substring(64, 68);
-        System.out.println("*** parseLine1: elementSetNumStr = \"" + elementSetNumStr + "\"");
+        //System.out.println("*** parseLine1: elementSetNumStr = \"" + elementSetNumStr + "\"");
         elementSetNumStr = elementSetNumStr.stripLeading();
-        System.out.println("*** parseLine1: elementSetNumStr = \"" + elementSetNumStr + "\"");
+        //System.out.println("*** parseLine1: elementSetNumStr = \"" + elementSetNumStr + "\"");
         elementSetNum = Integer.parseInt(elementSetNumStr);
     }
 
@@ -292,24 +292,24 @@ public class TwoLineElementSet implements ElementSet {
     private int parseSatNo(String line) {
 
         String satNumberStr = line.substring(2, 7);
-        System.out.println("*** parseLine1: satNumberStr = \"" + satNumberStr + "\"");
+        //System.out.println("*** parseLine1: satNumberStr = \"" + satNumberStr + "\"");
         satNumberStr = satNumberStr.stripLeading();
         return Integer.parseInt(satNumberStr);
     }
     private void parseMeanMotionDeriv2(String line1) {
 
         String meanMotionDeriv2Str = line1.substring(44, 50);
-        System.out.println("*** parseLine1: meanMotionDeriv2Str = \"" + meanMotionDeriv2Str + "\"");
+        //System.out.println("*** parseLine1: meanMotionDeriv2Str = \"" + meanMotionDeriv2Str + "\"");
         String meanMotionDerivExpString = line1.substring(50, 52);
-        System.out.println("*** parseLine1: meanMotionDerivExpString = \"" + meanMotionDerivExpString + "\"");
+        //System.out.println("*** parseLine1: meanMotionDerivExpString = \"" + meanMotionDerivExpString + "\"");
         int exp = Integer.parseInt(meanMotionDerivExpString);
-        System.out.println("*** parseLine1: exp = " + exp);
+        //System.out.println("*** parseLine1: exp = " + exp);
         meanMotionDeriv2 = Double.parseDouble(meanMotionDeriv2Str);
-        System.out.println("*** parseLine1: meanMotionDeriv2 = " + meanMotionDeriv2);
+        //System.out.println("*** parseLine1: meanMotionDeriv2 = " + meanMotionDeriv2);
         meanMotionDeriv2 = meanMotionDeriv2*0.00001;
-        System.out.println("*** parseLine1: meanMotionDeriv2 = " + meanMotionDeriv2);
+        //System.out.println("*** parseLine1: meanMotionDeriv2 = " + meanMotionDeriv2);
         meanMotionDeriv2 = meanMotionDeriv2*Math.pow(10, exp);
-        System.out.println("*** parseLine1: meanMotionDeriv2 = " + meanMotionDeriv2);
+        //System.out.println("*** parseLine1: meanMotionDeriv2 = " + meanMotionDeriv2);
     }
 
     private void parseBstar(String line1) {
