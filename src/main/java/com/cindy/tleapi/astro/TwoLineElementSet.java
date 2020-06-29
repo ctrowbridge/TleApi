@@ -1,11 +1,16 @@
 package com.cindy.tleapi.astro;
 
+import com.cindy.tleapi.db.CreateDB;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Base Two Line Element Set class
  */
 public class TwoLineElementSet implements ElementSet {
+
+    private static final Logger logger = LogManager.getLogger(TwoLineElementSet.class);
 
     private String name;
     private int satelliteNumber;
@@ -239,7 +244,7 @@ public class TwoLineElementSet implements ElementSet {
 
         line1 = StringUtils.rightPad(line1, 80, " ");
         name = line1.substring(0, 24);
-        System.out.println("*** importElset: name = " + name);
+        logger.debug("importElset: name = " + name);
         parseLine1(line2);
         parseLine2(line3);
     }
@@ -282,9 +287,9 @@ public class TwoLineElementSet implements ElementSet {
     private void parseLineNumber(String line, int expectedLineNumber) {
 
         String lineNumberStr = line.substring(0, 1);
-        System.out.println("*** parseLine1: lineNumberStr = \"" + lineNumberStr + "\"");
+        logger.debug("parseLine1: lineNumberStr = \"" + lineNumberStr + "\"");
         int lineNumber = Integer.parseInt(lineNumberStr);
-        System.out.println("*** parseLine1: lineNumber = " + lineNumber);
+        logger.debug("parseLine1: lineNumber = " + lineNumber);
 
         // TODO: validate line number
     }
@@ -292,18 +297,18 @@ public class TwoLineElementSet implements ElementSet {
     private int parseSatNo(String line) {
 
         String satNumberStr = line.substring(2, 7);
-        //System.out.println("*** parseLine1: satNumberStr = \"" + satNumberStr + "\"");
+        //logger.debug("*** parseLine1: satNumberStr = \"" + satNumberStr + "\"");
         satNumberStr = satNumberStr.stripLeading();
         return Integer.parseInt(satNumberStr);
     }
     private void parseMeanMotionDeriv2(String line1) {
 
         String meanMotionDeriv2Str = line1.substring(44, 50);
-        //System.out.println("*** parseLine1: meanMotionDeriv2Str = \"" + meanMotionDeriv2Str + "\"");
+        //logger.debug("*** parseLine1: meanMotionDeriv2Str = \"" + meanMotionDeriv2Str + "\"");
         String meanMotionDerivExpString = line1.substring(50, 52);
-        //System.out.println("*** parseLine1: meanMotionDerivExpString = \"" + meanMotionDerivExpString + "\"");
+        //logger.debug("*** parseLine1: meanMotionDerivExpString = \"" + meanMotionDerivExpString + "\"");
         int exp = Integer.parseInt(meanMotionDerivExpString);
-        //System.out.println("*** parseLine1: exp = " + exp);
+        //logger.debug("*** parseLine1: exp = " + exp);
         meanMotionDeriv2 = Double.parseDouble(meanMotionDeriv2Str);
         //System.out.println("*** parseLine1: meanMotionDeriv2 = " + meanMotionDeriv2);
         meanMotionDeriv2 = meanMotionDeriv2*0.00001;
@@ -323,7 +328,8 @@ public class TwoLineElementSet implements ElementSet {
     }
 
     private void parseLine2(String line2) {
-        System.out.println("*** parseLine2: line2 = \"" + line2 + "\"");
+
+        logger.debug("parseLine2: line2 = \"" + line2 + "\"");
 
         parseLineNumber(line2, 2);
         int satelliteNumber2 = parseSatNo(line2);
@@ -344,8 +350,9 @@ public class TwoLineElementSet implements ElementSet {
     }
 
     private Angle parseAngle(String line, int start, int end) {
+
         String angleStr = line.substring(start, end);
-        System.out.println("*** parseLine2: angleStr = \"" + angleStr + "\"");
+        logger.debug("parseLine2: angleStr = \"" + angleStr + "\"");
         double angleDeg = Double.parseDouble(angleStr);
         return new Angle(angleDeg, Angle.AngleUnits.DEGREES);
     }

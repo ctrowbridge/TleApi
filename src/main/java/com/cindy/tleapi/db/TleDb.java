@@ -1,6 +1,8 @@
 package com.cindy.tleapi.db;
 
 import com.cindy.tleapi.astro.TwoLineElementSet;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -15,6 +17,8 @@ import java.util.Scanner;
  */
 public class TleDb {
 
+    static final Logger logger = LogManager.getLogger();
+
     private static final String driver = "org.apache.derby.jdbc.EmbeddedDriver";
     private static final String databaseURL = "jdbc:derby:scripts/tledb";
 
@@ -27,13 +31,13 @@ public class TleDb {
      */
     public void open() throws Exception {
 
-        System.out.println("\nOpen database ...");
+        logger.info("Open database ...");
         conn = DriverManager.getConnection(databaseURL);
-        System.out.println("  conn = " + conn);
+        logger.info("  conn = " + conn);
     }
 
     public void close() throws Exception {
-        System.out.println("\nClose database ...");
+        logger.info("Close database ...");
         if (conn != null) {
             conn.close();
         }
@@ -42,7 +46,7 @@ public class TleDb {
     public void executeSql(String sql) throws Exception {
 
         Statement statement = conn.createStatement();
-        System.out.println("\nExecute statement= " + statement);
+        logger.info("Execute statement= " + statement);
         statement.execute(sql);
     }
 
@@ -53,7 +57,7 @@ public class TleDb {
      */
     public void createTable() throws Exception {
 
-        System.out.println("\nCreate database table ...");
+        logger.info("Create database table ...");
         if (conn == null) {
             open();
         }
@@ -83,7 +87,7 @@ public class TleDb {
         sql += "revolutionNum int";
         sql += ")";
 
-        System.out.println(" sql = \"" + sql + "\"");
+        logger.info(" sql = \"" + sql + "\"");
         statement.execute(sql);
     }
 
@@ -96,7 +100,7 @@ public class TleDb {
      */
     public void load(String filename) throws Exception {
 
-        System.out.println("*** load " + filename);
+        logger.info("load " + filename);
         if (conn == null) {
             open();
         }
@@ -136,11 +140,11 @@ public class TleDb {
                 sql += elset.getRevolutionNum();
                 sql += ")";
 
-                System.out.println("*** sql = \"" + sql + "\"");
+                logger.info("sql = \"" + sql + "\"");
                 statement.execute(sql);
             }
         } catch (Exception exp) {
-            System.out.println("****** Error " + exp);
+            logger.error("****** Error " + exp);
         }
 
     }

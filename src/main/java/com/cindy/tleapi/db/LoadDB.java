@@ -1,13 +1,18 @@
 package com.cindy.tleapi.db;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * Opens and populates the TLEDB Database.
  */
 public class LoadDB {
 
+    private static final Logger logger = LogManager.getLogger();
+
     public static void main(String[] args) {
 
-        System.out.println("<><><> LoadTleDB <><><>");
+        logger.info("<><><> LoadTleDB <><><>");
 
         TleDb db = new TleDb();
 
@@ -17,7 +22,7 @@ public class LoadDB {
             db.close();
 
         } catch (Exception e) {
-            System.out.println("Exception: " + e);
+            logger.error("Exception: " + e);
         }
     }
 }
