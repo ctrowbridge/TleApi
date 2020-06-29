@@ -1,7 +1,7 @@
 package com.cindy.tleapi.db;
 
 /**
- * Creates and populates the TLE Database
+ * Opens and populates the TLEDB Database.
  */
 public class LoadDB {
 
