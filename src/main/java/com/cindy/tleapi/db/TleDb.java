@@ -28,10 +28,6 @@ public class TleDb {
     public void open() throws Exception {
 
         System.out.println("\nOpen database ...");
-        String classpathStr = System.getProperty("java.class.path");
-        System.out.println("  java.class.path = " + classpathStr);
-        Class.forName(driver);
-
         conn = DriverManager.getConnection(databaseURL);
         System.out.println("  conn = " + conn);
     }
@@ -46,7 +42,7 @@ public class TleDb {
     public void executeSql(String sql) throws Exception {
 
         Statement statement = conn.createStatement();
-        System.out.println("  statement = " + statement);
+        System.out.println("\nExecute statement= " + statement);
         statement.execute(sql);
     }
 
@@ -57,7 +53,7 @@ public class TleDb {
      */
     public void createTable() throws Exception {
 
-        System.out.println("Create database table ...");
+        System.out.println("\nCreate database table ...");
         if (conn == null) {
             open();
         }
@@ -87,7 +83,7 @@ public class TleDb {
         sql += "revolutionNum int";
         sql += ")";
 
-        System.out.println("*** sql = \"" + sql + "\"");
+        System.out.println(" sql = \"" + sql + "\"");
         statement.execute(sql);
     }
 
