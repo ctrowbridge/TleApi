@@ -119,7 +119,6 @@ public class TestTwoLineElementSet {
         Assert.assertEquals(elset.getMeanMotionDeriv2(), meanMotionDeriv2Expected);
         Assert.assertEquals(elset.getBstar(), bstarExpected);
         Assert.assertEquals(elset.getElementSetNum(), elsetNumExpected);
-        Assert.assertEquals(elset.getElementSetNum(), elsetNumExpected);
         Assert.assertEquals(elset.getInclination().getDegrees(), incDegExpected);
         Assert.assertEquals(elset.getRightAscension().getDegrees(), raDegExpected);
         Assert.assertEquals(elset.getEccentricity(), eccExpected);
