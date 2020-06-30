@@ -1,14 +1,15 @@
 package com.cindy.tleapi.db;
 
+import com.cindy.tleapi.astro.Angle;
 import com.cindy.tleapi.astro.TwoLineElementSet;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 
@@ -73,7 +74,7 @@ public class TleDb {
         sql += "classification varchar(1),";
         sql += "internationalDesignator varchar(10),";
         sql += "epochYear int,";
-        sql += "epochDay int,";
+        sql += "epochDay double,";
         sql += "meanMotionDeriv1 double,";
         sql += "meanMotionDeriv2 double,";
         sql += "bstar double,";
@@ -100,6 +101,7 @@ public class TleDb {
      */
     public void load(String filename) throws Exception {
 
+        int count = 0;
         logger.info("load " + filename);
         if (conn == null) {
             open();
@@ -114,7 +116,7 @@ public class TleDb {
                 String line0 = sc.nextLine();
                 String line1 = sc.nextLine();
                 String line2 = sc.nextLine();
-
+                count++;
                 TwoLineElementSet elset = new TwoLineElementSet();
                 elset.importElset(line0, line1, line2);
 
@@ -146,6 +148,97 @@ public class TleDb {
         } catch (Exception exp) {
             logger.error("****** Error " + exp);
         }
+        logger.info("count = " + count);
+    }
 
+    /**
+     * Retrieves the number of element set in the TLEDB database.
+     *
+     * @return
+     * @throws Exception
+     */
+    public int getElsetCount() throws Exception {
+
+        logger.info("getElsetCount");
+        if (conn == null) {
+            open();
+        }
+
+        String sql = "select count(*) from tledb";
+        Statement statement = conn.createStatement();
+        ResultSet result = statement.executeQuery(sql);
+        result.next();
+
+        String countStr = result.getString("1");
+        return Integer.parseInt(countStr);
+    }
+
+    public List<TwoLineElementSet> getElsets() throws Exception {
+
+        int count = 0;
+        logger.info("getElsets");
+        if (conn == null) {
+            open();
+        }
+        List<TwoLineElementSet> elsets = new ArrayList<TwoLineElementSet>();
+        Statement statement = conn.createStatement();
+        String sql = "SELECT * from TLEDB";
+        ResultSet result = statement.executeQuery(sql);
+        logger.debug("getElsets: result = " + result);
+        while (result.next()) {
+            count++;
+            TwoLineElementSet elset = parseOneRow(result);
+            elsets.add(elset);
+        }
+
+        logger.debug("getElsets: count = " + count);
+        return elsets;
+    }
+
+    private TwoLineElementSet parseOneRow(ResultSet row) throws SQLException {
+
+        logger.debug("parseOneRow:");
+        TwoLineElementSet elset = new TwoLineElementSet();
+
+        elset.setSatelliteNumber(getInt(row, "satelliteNumber"));
+        elset.setName(row.getString("name"));
+        elset.setClassification(row.getString("classification"));
+        elset.setInternationalDesignator(row.getString("internationalDesignator"));
+        elset.setEpochYear(getInt(row, "epochYear"));
+        elset.setEpochDay(getDouble(row, "epochDay"));
+        elset.setMeanMotionDeriv1(getDouble(row, "meanMotionDeriv1"));
+        elset.setMeanMotionDeriv2(getDouble(row, "meanMotionDeriv2"));
+        elset.setBstar(getDouble(row, "bstar"));
+        elset.setElementSetNum(getInt(row, "elementSetNum"));
+        elset.setInclination(new Angle(getDouble(row, "inclination"), Angle.AngleUnits.DEGREES));
+        elset.setRightAscension(new Angle(getDouble(row, "rightAscension"), Angle.AngleUnits.DEGREES));
+        elset.setEccentricity(getDouble(row, "eccentricity"));
+        elset.setArgumentOfPerigee(new Angle(getDouble(row, "argumentOfPerigee"), Angle.AngleUnits.DEGREES));
+        elset.setMeanAnomaly(new Angle(getDouble(row, "meanAnomaly"), Angle.AngleUnits.DEGREES));
+        elset.setMeanMotion(getDouble(row, "meanMotion"));
+        elset.setRevolutionNum(getInt(row, "revolutionNum"));
+
+        return elset;
+    }
+
+    private int getInt(ResultSet row, String columnName) throws SQLException {
+        String str = row.getString(columnName);
+        return Integer.parseInt(str);
+    }
+
+    private double getDouble(ResultSet row, String columnName) throws SQLException {
+        String str = row.getString(columnName);
+        return Double.parseDouble(str);
+    }
+
+    public String getDatabaseProductName() throws SQLException {
+        if (conn != null) {
+
+            DatabaseMetaData metaData = conn.getMetaData();
+            logger.debug("metaData = " + metaData);
+
+            return metaData.getDatabaseProductName();
+        }
+        return "Not Connected";
     }
 }
