@@ -6,7 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Base Two Line Element Set class
+ * Implements a Two Line Element Set class.
  */
 public class TwoLineElementSet implements ElementSet {
 

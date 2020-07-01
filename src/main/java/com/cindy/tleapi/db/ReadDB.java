@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 /**
- * Reads from the TLEDB database
+ * Opens and reads from the TLEDB database.
  */
 public class ReadDB {
 

@@ -1,7 +1,7 @@
 package com.cindy.tleapi.astro;
 
 /**
- * Represents one Angle, with units specified
+ * Represents one Angle, with units specified.
  */
 public class Angle {
 

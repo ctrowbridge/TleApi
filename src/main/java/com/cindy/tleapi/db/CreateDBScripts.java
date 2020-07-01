@@ -6,7 +6,7 @@ import java.io.*;
 import java.util.Scanner;
 
 /**
- * This class creates scripts used to connect, create and load
+ * Creates scripts used to connect, create and load
  * TLE database.
  */
 public class CreateDBScripts {
