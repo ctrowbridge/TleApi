@@ -1,0 +1,33 @@
+{
+	"info": {
+		"_postman_id": "249d8101-2059-49fb-906c-d2c99971f462",
+		"name": "TleAPI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GET",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8981/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8981",
+					"path": [
+						""
+					]
+				},
+				"description": "Initial GET"
+			},
+			"response": []
+		}
+	]
+}
