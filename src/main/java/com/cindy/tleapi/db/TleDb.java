@@ -15,6 +15,7 @@ import java.util.Scanner;
 
 /**
  * Opens, creates and loads the TLE database.
+ * TODO:  Add update
  */
 public class TleDb {
 
@@ -26,7 +27,7 @@ public class TleDb {
     private Connection conn = null;
 
     /**
-     * Connects to the database
+     * Connects to the database.
      *
      * @throws Exception
      */
@@ -37,6 +38,11 @@ public class TleDb {
         logger.info("  conn = " + conn);
     }
 
+    /**
+     * Closes the database.
+     *
+     * @throws Exception
+     */
     public void close() throws Exception {
         logger.info("Close database ...");
         if (conn != null) {
@@ -67,6 +73,7 @@ public class TleDb {
         String sqlDrop = "drop table tledb";
         statement.execute(sqlDrop);
 
+        // TODO:  Make variables with fields names
         String sql = "CREATE TABLE tledb";
         sql += "(";
         sql += "satelliteNumber int, ";
@@ -173,10 +180,16 @@ public class TleDb {
         return Integer.parseInt(countStr);
     }
 
+    /**
+     * Retrieves all element sets from database.
+     *
+     * @return A List of element sets.
+     * @throws Exception
+     */
     public List<TwoLineElementSet> getElsets() throws Exception {
 
         int count = 0;
-        logger.info("getElsets");
+        logger.info("getElsets:");
         if (conn == null) {
             open();
         }
@@ -193,6 +206,39 @@ public class TleDb {
 
         logger.debug("getElsets: count = " + count);
         return elsets;
+    }
+
+    /**
+     * Retrieves one element set from the database
+     *
+     * @param satno Element set number to retrieve
+     * @return Element set
+     * @throws Exception
+     */
+    public TwoLineElementSet getElset(int satno) throws Exception {
+
+        logger.info("getElset: " + satno);
+        if (conn == null) {
+            open();
+        }
+        Statement statement = conn.createStatement();
+        String sql = "SELECT * from TLEDB where satelliteNumber = " + satno;
+        ResultSet result = statement.executeQuery(sql);
+        logger.debug("getElset: result = " + result);
+        result.next();
+        return parseOneRow(result);
+    }
+
+    public String getDatabaseProductName() throws SQLException {
+
+        if (conn != null) {
+
+            DatabaseMetaData metaData = conn.getMetaData();
+            logger.debug("metaData = " + metaData);
+
+            return metaData.getDatabaseProductName();
+        }
+        return "Not Connected";
     }
 
     private TwoLineElementSet parseOneRow(ResultSet row) throws SQLException {
@@ -231,14 +277,4 @@ public class TleDb {
         return Double.parseDouble(str);
     }
 
-    public String getDatabaseProductName() throws SQLException {
-        if (conn != null) {
-
-            DatabaseMetaData metaData = conn.getMetaData();
-            logger.debug("metaData = " + metaData);
-
-            return metaData.getDatabaseProductName();
-        }
-        return "Not Connected";
-    }
 }
