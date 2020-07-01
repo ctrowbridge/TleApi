@@ -9,12 +9,16 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
+
+        <!-- Java Version 13 -->
         <maven.compiler.source>1.13</maven.compiler.source>
         <maven.compiler.target>1.13</maven.compiler.target>
+
     </properties>
 
     <dependencies>
 
+        <!-- Logging -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
@@ -26,6 +30,7 @@
             <version>2.13.3</version>
         </dependency>
 
+        <!-- TestNG: Testing Framework -->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
@@ -39,6 +44,20 @@
             <version>3.10</version>
         </dependency>
 
+        <!-- Javalin: Used by the com.cindy.tleapi.api package -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.8.0-beta4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.javalin</groupId>
+            <artifactId>javalin</artifactId>
+            <version>3.9.1</version>
+        </dependency>
+
+        <!-- Derby:  Embedded database -->
         <dependency>
             <groupId>org.apache.derby</groupId>
             <artifactId>derby</artifactId>
