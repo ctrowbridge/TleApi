@@ -3,3 +3,4 @@
 */target/*
 derby.log
 /scripts/tledb/*
+application*.log
