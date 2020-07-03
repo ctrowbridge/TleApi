@@ -357,6 +357,28 @@ public class TwoLineElementSet implements ElementSet {
         return new Angle(angleDeg, Angle.AngleUnits.DEGREES);
     }
 
+    public String toJson() {
+        return "{\n" +
+                "\tname='" + name + '\'' +
+                ",\n\tsatelliteNumber=" + satelliteNumber +
+                ",\n\tclassification='" + classification + '\'' +
+                ",\n\tinternationalDesignator='" + internationalDesignator + '\'' +
+                ",\n\tepochYear=" + epochYear +
+                ",\n\tepochDay=" + epochDay +
+                ",\n\tmeanMotionDeriv1=" + meanMotionDeriv1 +
+                ",\n\tmeanMotionDeriv2=" + meanMotionDeriv2 +
+                ",\n\tbstar=" + bstar +
+                ",\n\telementSetNum=" + elementSetNum +
+                ",\n\tinclination=" + inclination.getDegrees() +
+                ",\n\trightAscension=" + rightAscension.getDegrees() +
+                ",\n\teccentricity=" + eccentricity +
+                ",\n\targumentOfPerigee=" + argumentOfPerigee.getDegrees() +
+                ",\n\tmeanAnomaly=" + meanAnomaly.getDegrees() +
+                ",\n\tmeanMotion=" + meanMotion +
+                ",\n\trevolutionNum=" + revolutionNum +
+                "\n}";
+    }
+
     @Override
     public String toString() {
         return "TwoLineElementSet{" +
