@@ -1,6 +1,5 @@
 package com.cindy.tleapi.astro;
 
-import com.cindy.tleapi.db.CreateDB;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -57,7 +56,7 @@ public class TwoLineElementSet implements ElementSet {
         this(satelliteNumber, classification, internationalDesignator, epochYear, epochDay,
                 meanMotionDeriv1, meanMotionDeriv2, bstar, elementSetNum,
                 inclination, rightAscension, eccentricity,
-                rightAscension, meanAnomaly, meanMotion, revolutionNum);
+                argumentOfPerigee, meanAnomaly, meanMotion, revolutionNum);
         this.name = name;
     }
 
@@ -96,6 +95,9 @@ public class TwoLineElementSet implements ElementSet {
         this.revolutionNum = revolutionNum;
     }
 
+    /**
+     * Default constructor
+     */
     public TwoLineElementSet() {
     }
 

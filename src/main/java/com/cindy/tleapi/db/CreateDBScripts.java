@@ -62,6 +62,7 @@ public class CreateDBScripts {
             pWriter.println("-- Script to connect to database");
             pWriter.println("CONNECT 'jdbc:derby:" + dbName + ";create=true';");
             pWriter.close();
+            fWriter.close();
 
         } catch (IOException e) {
             e.printStackTrace();

@@ -4,7 +4,6 @@ import com.cindy.tleapi.astro.TwoLineElementSet;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -57,7 +56,6 @@ public class ReadDB {
     private static void readAllElementSets(TleDb db) throws Exception {
 
         logger.info("readAllElementSets:");
-        String databaseName = db.getDatabaseProductName();
         List<TwoLineElementSet> elsets = db.getElsets();
         for (TwoLineElementSet elset : elsets) {
             logger.info("elset = " + elset);
