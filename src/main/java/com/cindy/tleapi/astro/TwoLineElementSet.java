@@ -361,23 +361,23 @@ public class TwoLineElementSet implements ElementSet {
 
     public String toJson() {
         return "{\n" +
-                "\tname='" + name + '\'' +
-                ",\n\tsatelliteNumber=" + satelliteNumber +
-                ",\n\tclassification='" + classification + '\'' +
-                ",\n\tinternationalDesignator='" + internationalDesignator + '\'' +
-                ",\n\tepochYear=" + epochYear +
-                ",\n\tepochDay=" + epochDay +
-                ",\n\tmeanMotionDeriv1=" + meanMotionDeriv1 +
-                ",\n\tmeanMotionDeriv2=" + meanMotionDeriv2 +
-                ",\n\tbstar=" + bstar +
-                ",\n\telementSetNum=" + elementSetNum +
-                ",\n\tinclination=" + inclination.getDegrees() +
-                ",\n\trightAscension=" + rightAscension.getDegrees() +
-                ",\n\teccentricity=" + eccentricity +
-                ",\n\targumentOfPerigee=" + argumentOfPerigee.getDegrees() +
-                ",\n\tmeanAnomaly=" + meanAnomaly.getDegrees() +
-                ",\n\tmeanMotion=" + meanMotion +
-                ",\n\trevolutionNum=" + revolutionNum +
+                "\t\"name\": \"" + name + "\"" +
+                ",\n\t\"satelliteNumber\": " + satelliteNumber +
+                ",\n\t\"classification\": \"" + classification + "\"" +
+                ",\n\t\"internationalDesignator\": \""  + internationalDesignator + "\"" +
+                ",\n\t\"epochYear\": " + epochYear +
+                ",\n\t\"epochDay\": " + epochDay +
+                ",\n\t\"meanMotionDeriv1\": " + meanMotionDeriv1 +
+                ",\n\t\"meanMotionDeriv2\": " + meanMotionDeriv2 +
+                ",\n\t\"bstar\": " + bstar +
+                ",\n\t\"elementSetNum\": " + elementSetNum +
+                ",\n\t\"inclination\": " + inclination.getDegrees() +
+                ",\n\t\"rightAscension\": " + rightAscension.getDegrees() +
+                ",\n\t\"eccentricity\": " + eccentricity +
+                ",\n\t\"argumentOfPerigee\": " + argumentOfPerigee.getDegrees() +
+                ",\n\t\"meanAnomaly\": " + meanAnomaly.getDegrees() +
+                ",\n\t\"meanMotion\": " + meanMotion +
+                ",\n\t\"revolutionNum\": " + revolutionNum +
                 "\n}";
     }
 
