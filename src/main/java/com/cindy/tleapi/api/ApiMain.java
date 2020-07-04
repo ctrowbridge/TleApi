@@ -49,9 +49,16 @@ public class ApiMain {
     }
 
     private static void createRoutes() {
+
         app.get("", ctx -> {
             ctx.result("Starting to create the API ...");
         });
+
+        createGetRoute();
+        createGetRouteWithParameter();
+    }
+
+    private static void createGetRoute() {
 
         // TODO Replace String with StringBuffer
         app.get("/elsets", ctx -> {
@@ -64,4 +71,40 @@ public class ApiMain {
         });
     }
 
+    private static void createGetRouteWithParameter() {
+
+        app.get("/elsets/:satno", ctx -> {
+            int satno = -1;
+            try {
+                int statusCode = 200;
+                boolean found = false;
+                satno = Integer.parseInt(ctx.pathParam("satno"));
+                logger.info("Api::createRoutes:  satno = " + satno);
+
+                String resultStr = "";
+                for (TwoLineElementSet elset : elsets) {
+                    if (elset.getSatelliteNumber() == satno) {
+                        resultStr = resultStr + elset.toJson();
+                        found = true;
+                        logger.info("Api::createRoutes:  found = " + found + " " + resultStr);
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    logger.info("Api::createRoutes:  not found = " + found);
+
+                    resultStr = "Satellite number not found";
+                    statusCode = 404;
+                }
+                logger.info("Api::createRoutes:  statusCode = " + statusCode);
+                ctx.result(resultStr).status(statusCode);
+
+            } catch (Exception exp) {
+                String resultStr = "satno parameter not an integer ";
+                resultStr += exp.getMessage();
+                ctx.result(resultStr).status(400);
+            }
+        });
+    }
 }
