@@ -26,11 +26,11 @@ public class ApiMain {
 
         try {
             loadData();
+            createServer(port);
+            createRoutes();
         } catch (Exception exp) {
             logger.error("****** Error " + exp);
         }
-        createServer(port);
-        createRoutes();
     }
 
     private static void loadData() throws Exception {
