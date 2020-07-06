@@ -9,7 +9,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 
 /**
- * Main class for the TLE API.
+ * Main class for the TLE API. The API is implemented using Javalin.
  *
  * Reference:
  *   https://javalin.io/
@@ -22,18 +22,30 @@ public class ApiMain {
     private static List<TwoLineElementSet> elsets;
     private static final Logger logger = LogManager.getLogger();
 
+    /**
+     * Main app for the API.
+     *
+     * @param args
+     */
     public static void main(String[] args) {
 
         try {
             loadData();
             createServer(port);
             createRoutes();
+
         } catch (Exception exp) {
             logger.error("****** Error " + exp);
         }
     }
 
+    /**
+     * Loads data from the TLE DB.
+     *
+     * @throws Exception
+     */
     private static void loadData() throws Exception {
+
         logger.info("ApiMain::loadData:");
 
         TleDb tledb = new TleDb();
@@ -42,6 +54,11 @@ public class ApiMain {
         logger.info("Api::main:  elsets loaded, count = " + elsets.size());
     }
 
+    /**
+     * Creates the Javalin server on the given port.
+     *
+     * @param port Port to use for the server
+     */
     private static void createServer(int port) {
 
         logger.info("ApiMain::createServer:  starting Javalin server on port " + port + " ...");
@@ -67,6 +84,7 @@ public class ApiMain {
                 resultStr = resultStr + elset.toJson() + ",\n";
             }
             resultStr = resultStr + "\n]";
+            ctx.contentType("application/json");
             ctx.result(resultStr);
         });
     }
@@ -98,6 +116,7 @@ public class ApiMain {
                     statusCode = 404;
                 }
                 logger.info("Api::createRoutes:  statusCode = " + statusCode);
+                ctx.contentType("application/json");
                 ctx.result(resultStr).status(statusCode);
 
             } catch (Exception exp) {
