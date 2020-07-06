@@ -75,6 +75,9 @@ public class ApiMain {
         createGetRouteWithParameter();
     }
 
+    /**
+     * Create route to get all elsets.
+     */
     private static void createGetRoute() {
 
         // TODO Replace String with StringBuffer
@@ -83,12 +86,20 @@ public class ApiMain {
             for (TwoLineElementSet elset : elsets) {
                 resultStr = resultStr + elset.toJson() + ",\n";
             }
+            resultStr = resultStr.substring(0, resultStr.length()-2);
             resultStr = resultStr + "\n]";
             ctx.contentType("application/json");
+            ctx.header("Access-Control-Allow-Origin",
+                    "*");
+            ctx.header("Access-Control-Allow-Headers",
+                    "Origin, X-Requested-With, ContentType, Accept");
             ctx.result(resultStr);
         });
     }
 
+    /**
+     * Create route to get one elset
+     */
     private static void createGetRouteWithParameter() {
 
         app.get("/elsets/:satno", ctx -> {
@@ -117,6 +128,8 @@ public class ApiMain {
                 }
                 logger.info("Api::createRoutes:  statusCode = " + statusCode);
                 ctx.contentType("application/json");
+                ctx.header("Access-Control-Allow-Origin", "*");
+                ctx.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, ContentType, Accept");
                 ctx.result(resultStr).status(statusCode);
 
             } catch (Exception exp) {
