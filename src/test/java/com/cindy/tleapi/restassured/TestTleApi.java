@@ -8,9 +8,11 @@ import static io.restassured.matcher.RestAssuredMatchers.*;
 
 import io.restassured.config.RestAssuredConfig;
 import io.restassured.http.ContentType;
+import io.restassured.http.Headers;
 import io.restassured.response.*;
 import io.restassured.response.ResponseBody;
 
+import org.jetbrains.annotations.TestOnly;
 import org.testng.annotations.Test;
 import java.util.concurrent.TimeUnit;
 
@@ -31,6 +33,7 @@ public class TestTleApi {
 
     @Test
     public void getElsetsReturnsStatusCode200() {
+
         System.out.println("TestTleAPI::getElsetsReturnsStatusCode200:");
             given().
                 log().all().
@@ -66,6 +69,25 @@ public class TestTleApi {
         then().
             assertThat().
             statusCode(404);
+    }
+
+    @Test
+    public void getElsets() {
+
+        System.out.println("TestTleAPI::getElsets:");
+        Response response =
+            when().
+                get("http://localhost:8981/elsets").
+            then().
+                contentType("application/json").
+                statusCode(200).
+
+            extract().
+                response();
+
+        Headers headers = response.headers();
+        System.out.println("TestTleAPI::getElsets: headers = \"" + headers + "\"");
+        response.prettyPrint();
     }
 
     @Test
@@ -110,6 +132,9 @@ public class TestTleApi {
 
         String contentType = response.contentType();
         System.out.println("TestTleAPI::getElset: contentType = \"" + contentType + "\"");
+
+        Headers headers = response.headers();
+        System.out.println("TestTleAPI::getElset: headers = \"" + headers + "\"");
     }
 
     @Test
