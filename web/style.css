@@ -1,0 +1,13 @@
+table, th, td
+{
+    border: 1px solid black;
+    border-collapse: collapse;
+    font-family: verdana;
+    padding: 5px;
+}
+
+h1
+{
+    font-family: verdana;
+    text-align:center;
+}
