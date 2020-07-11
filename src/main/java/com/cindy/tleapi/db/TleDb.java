@@ -151,9 +151,11 @@ public class TleDb {
                 logger.info("sql = \"" + sql + "\"");
                 statement.execute(sql);
             }
+            sc.close();
         } catch (Exception exp) {
             logger.error("****** Error " + exp);
         }
+
         logger.info("count = " + count);
     }
 
@@ -192,7 +194,7 @@ public class TleDb {
         if (conn == null) {
             open();
         }
-        List<TwoLineElementSet> elsets = new ArrayList<TwoLineElementSet>();
+        List<TwoLineElementSet> elsets = new ArrayList<>();
         Statement statement = conn.createStatement();
         String sql = "SELECT * from TLEDB";
         ResultSet result = statement.executeQuery(sql);
@@ -212,7 +214,7 @@ public class TleDb {
      *
      * @param satno Element set number to retrieve
      * @return Element set
-     * @throws Exception
+     * @throws Exception Thrown when requested element set doesn't exist
      */
     public TwoLineElementSet getElset(int satno) throws Exception {
 
@@ -223,11 +225,44 @@ public class TleDb {
         Statement statement = conn.createStatement();
         String sql = "SELECT * from TLEDB where satelliteNumber = " + satno;
         ResultSet result = statement.executeQuery(sql);
-        logger.debug("getElset: result = " + result);
-        result.next();
-        return parseOneRow(result);
+        logger.info("getElset: result = " + result);
+        if (result.next()) {
+            return parseOneRow(result);
+        } else {
+            logger.error("getElset: element set not found " + satno);
+            throw new Exception("Element set " + satno + " doesn't exist");
+        }
     }
 
+    /**
+     * Checks to see if the requested satellite number exists in the database.
+     *
+     * @param satno Input satellite number
+     * @return True if the satellite number exists, false otherwise
+     * @throws Exception
+     */
+    public boolean ifElsetExists(int satno) throws Exception {
+
+        logger.info("ifElsetExists: " + satno);
+        if (conn == null) {
+            open();
+        }
+        Statement statement = conn.createStatement();
+        String sql = "SELECT * from TLEDB where satelliteNumber = " + satno;
+        ResultSet result = statement.executeQuery(sql);
+        logger.info("ifElsetExists: result = " + result);
+        if (result.next()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Gets the database product name (e.g., "Apache Derby")
+     * @return The database product name. Returns "Not Connected" is
+     *         the database is not connected.
+     * @throws SQLException
+     */
     public String getDatabaseProductName() throws SQLException {
 
         if (conn != null) {
@@ -238,6 +273,35 @@ public class TleDb {
             return metaData.getDatabaseProductName();
         }
         return "Not Connected";
+    }
+
+    /**
+     * Removes all records from the database.
+     *
+     * @throws Exception
+     */
+    public void emptyDb() throws Exception {
+
+        logger.info("emptyDb:");
+        if (conn == null) {
+            open();
+        }
+        Statement statement = conn.createStatement();
+        String sql = "TRUNCATE table TLEDB";
+        boolean result = statement.execute(sql);
+        logger.debug("emptyDb: result = " + result);
+    }
+
+    public void deleteElset(int satno) throws Exception {
+
+        logger.info("deleteElset: satno = " + satno);
+        if (conn == null) {
+            open();
+        }
+        Statement statement = conn.createStatement();
+        String sql = "DELETE from TLEDB where satelliteNumber = " + satno;
+        int result = statement.executeUpdate(sql);
+        logger.debug("emptyDb: result = " + result);
     }
 
     private TwoLineElementSet parseOneRow(ResultSet row) throws SQLException {

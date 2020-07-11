@@ -11,6 +11,9 @@ import org.testng.annotations.Test;
 
 import java.util.List;
 
+/**
+ * Contains unit tests for TLE Database package
+ */
 public class TestTleDB {
 
     private static final Logger logger = LogManager.getLogger();
@@ -36,7 +39,9 @@ public class TestTleDB {
     private final double meanMotionExpected = 14.85662621;
     private final int revNoExpected = 6578;
 
-    @Test
+    private final String testFileName = "data\\2019-006.txt";
+
+    @Test(priority = 1)
     public void testNewDB() {
 
         logger.info("testNewDB ...");
@@ -47,13 +52,15 @@ public class TestTleDB {
             db.createTable();
             int count = db.getElsetCount();
             Assert.assertEquals(count, 0);
+            String productName = db.getDatabaseProductName();
+            logger.info("testNewDB: productName = " + productName);
             db.close();
         } catch (Exception exp) {
             logger.error("**** Error: + " + exp);
         }
     }
 
-    @Test
+    @Test(priority = 2)
     public void TestReadWithoutOpen() {
 
         logger.info("TestReadWithoutOpen ...");
@@ -68,7 +75,7 @@ public class TestTleDB {
         }
     }
 
-    @Test
+    @Test(priority = 3)
     public void TestElsetParameters() {
 
         logger.info("TestElsetParameters ...");
@@ -76,7 +83,7 @@ public class TestTleDB {
         try {
             db.open();
             db.createTable();
-            db.load("data\\2019-006.txt");
+            db.load(testFileName);
             List<TwoLineElementSet> elsets = db.getElsets();
             TwoLineElementSet elset = elsets.get(0);
 
@@ -104,13 +111,63 @@ public class TestTleDB {
         }
     }
 
-    @Test
+    @Test (priority = 4, dependsOnMethods={"TestElsetParameters"})
+    public void TestEmptyDatabase() {
+
+        logger.info("TestEmptyDatabase ...");
+        TleDb db = new TleDb();
+
+        try {
+            db.open();
+            db.createTable();
+            int count = db.getElsetCount();
+            Assert.assertEquals(count, 0);
+            db.load(testFileName);
+            count = db.getElsetCount();
+            logger.info("count = " + count);
+            Assert.assertEquals(count, 7);
+            db.emptyDb();
+            count = db.getElsetCount();
+            logger.info("count = " + count);
+            Assert.assertEquals(count, 0);
+
+            db.close();
+        } catch (Exception exp) {
+            logger.error("**** Error: + " + exp);
+        }
+    }
+
+    @Test(priority = 5, dependsOnMethods={"TestEmptyDatabase"})
+    public void TestDeleteOneElset() {
+        logger.info("TestDeleteOneElset ...");
+        TleDb db = new TleDb();
+
+        try {
+            db.open();
+            db.createTable();
+            db.load(testFileName);
+            int count = db.getElsetCount();
+            logger.info("count = " + count);
+            Assert.assertEquals(count, 7);
+            db.deleteElset(44383);
+            count = db.getElsetCount();
+            logger.info("count = " + count);
+            Assert.assertEquals(count, 6);
+            db.getElset(44383);
+            db.close();
+        } catch (Exception exp) {
+            logger.error("**** Error: + " + exp);
+        }
+    }
+
+    @Test(priority = 6, dependsOnMethods={"TestDeleteOneElset"})
     public void TestToJason() {
+
         TleDb db = new TleDb();
         try {
             db.open();
             db.createTable();
-            db.load("data\\2019-006.txt");
+            db.load(testFileName);
             List<TwoLineElementSet> elsets = db.getElsets();
             TwoLineElementSet elset = elsets.get(0);
             String jsonStr = elset.toJson();
@@ -121,13 +178,34 @@ public class TestTleDB {
                 JsonParser.parseString(jsonStr);
             }
             catch(JsonSyntaxException jse){
-                System.out.println("Not a valid Json String:"+ jse.getMessage());
+                logger.error("Not a valid Json String:"+ jse.getMessage());
                 jsonParsed = false;
             }
             Assert.assertTrue(jsonParsed);
 
         } catch (Exception exp) {
             logger.error("**** Error: + " + exp);
+        }
+    }
+
+    @Test(priority = 7, dependsOnMethods={"TestToJason"})
+    public void TestGetNonexistentElset() {
+
+        TleDb db = new TleDb();
+        try {
+            db.open();
+            db.createTable();
+            db.load(testFileName);
+
+            boolean exists = db.ifElsetExists(1);
+            Assert.assertFalse(exists);
+
+            TwoLineElementSet elset = db.getElset(1);
+            Assert.fail();
+
+        } catch (Exception exp) {
+            logger.error("**** Error: + " + exp);
+            Assert.assertTrue(true);
         }
     }
 }
