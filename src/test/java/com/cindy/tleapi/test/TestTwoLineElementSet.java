@@ -3,6 +3,8 @@ package com.cindy.tleapi.test;
 import com.cindy.tleapi.astro.Angle;
 import com.cindy.tleapi.astro.TwoLineElementSet;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -10,6 +12,8 @@ import org.testng.annotations.Test;
  * Tests for the TwoLineElementSet class
  */
 public class TestTwoLineElementSet {
+
+    private static final Logger logger = LogManager.getLogger();
 
     // Test element set (two lines)
     private final int satnumExpected = 23455;
@@ -127,7 +131,7 @@ public class TestTwoLineElementSet {
         Assert.assertEquals(elset.getMeanMotion(), meanMotionExpected);
         Assert.assertEquals(elset.getRevolutionNum(), revNoExpected);
 
-        System.out.println("elset = " + elset);
+        logger.info("elset = " + elset);
     }
 
     @Test
@@ -153,7 +157,7 @@ public class TestTwoLineElementSet {
         Assert.assertEquals(elset.getMeanMotion(), meanMotionExpected);
         Assert.assertEquals(elset.getRevolutionNum(), revNoExpected);
 
-        System.out.println("elset = " + elset);
+        logger.info("elset = " + elset);
     }
 
     @Test
@@ -162,7 +166,7 @@ public class TestTwoLineElementSet {
         TwoLineElementSet elset = new TwoLineElementSet();
 
         elset.importElset(line30, line31, line32);
-        System.out.println("elset = " + elset);
+        logger.info("elset = " + elset);
 
         Assert.assertEquals(elset.getName(), nameExpected_3);
         Assert.assertEquals(elset.getMeanMotionDeriv1(), meanMotionDeriv1Expected_3, 0.00000001);
@@ -178,7 +182,7 @@ public class TestTwoLineElementSet {
         TwoLineElementSet elset = new TwoLineElementSet();
 
         elset.importElset(line40, line41, line42);
-        System.out.println("elset = " + elset);
+        logger.info("elset = " + elset);
 
         Assert.assertEquals(elset.getBstar(), bstarExpected_4, 0.00000001);
     }
@@ -189,7 +193,7 @@ public class TestTwoLineElementSet {
         TwoLineElementSet elset = new TwoLineElementSet();
 
         elset.importElset(line50, line51, line52);
-        System.out.println("elset = " + elset);
+        logger.info("elset = " + elset);
 
         Assert.assertEquals(elset.getName().trim(), nameExpected_5.trim());
         Assert.assertEquals(elset.getRevolutionNum(), revNumExpected_5);
