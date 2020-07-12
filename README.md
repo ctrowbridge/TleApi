@@ -33,6 +33,7 @@ in the  **com.cindy.tleapi.db** package.
     
 * To run unit tests on the database, run the *TestTleDB* class
 in the **com.cindy.tleapi.test** package.
+
     `> mvn -Dtest=TestTleDB test`
 * To run unit test on the TwoLineElementSet class, run the *TestTwoLineElementSet* class
 in the *com.cindy.tleapi.test** package.
@@ -43,6 +44,52 @@ in the *com.cindy.tleapi.test** package.
 in the **com.cindy.tleapi.api** package. 
 The API will run on
 URL:  http://localhost:8981/
+
+    `> mvn exec:java -Dexec.mainClass="com.cindy.tleapi.api.ApiMain"`
 * To run the REST-Assured tests,
 run the *TestTleApi* class in the **com.cindy.tleapi.restassured** package
 after starting the API. 
+
+    `> mvn -Dtest="com.cindy.tleapi.restassured.TestTleApi" test`
+
+# API Documentation
+
+The TLE API is a REST API. It currently outputs two line element set parameters in JSON 
+format.  For details on the two line element set format, see 
+https://en.wikipedia.org/wiki/Two-line_element_set
+
+## List all Element Sets
+http://localhost:8981/elsets
+
+Retrieves a list of all elsets in the TLE database.
+
+## List one Element Set
+http://localhost:8981/elsets/<num>
+
+Retrieves one elset given a number.  For example:
+
+http://localhost:8981/elsets/44134
+
+returns
+```
+{
+    "name": "MICROSAT-R DEB          ",
+    "satelliteNumber": 44134,
+    "classification": "U",
+    "internationalDesignator": "19006V  ",
+    "epochYear": 20,
+    "epochDay": 174.41671131,
+    "meanMotionDeriv1": 1.6095E-4,
+    "meanMotionDeriv2": 1.4248000000000003E-6,
+    "bstar": 1.9296000000000002E-4,
+    "elementSetNum": 999,
+    "inclination": 96.0467,
+    "rightAscension": 333.7157,
+    "eccentricity": 0.0479877,
+    "argumentOfPerigee": 321.356,
+    "meanAnomaly": 35.4204,
+    "meanMotion": 14.85662621,
+    "revolutionNum": 6578
+}
+```
+
