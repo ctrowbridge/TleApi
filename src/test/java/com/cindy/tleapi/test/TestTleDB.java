@@ -45,7 +45,7 @@ public class TestTleDB {
     @Test(priority = 1)
     public void testNewDB() {
 
-        logger.info("testNewDB ...");
+        logger.info("testNewDB ========================================================");
         TleDb db = new TleDb();
 
         try {
@@ -67,7 +67,7 @@ public class TestTleDB {
     @Test(priority = 2, dependsOnMethods={"testNewDB"})
     public void TestReadWithoutOpen() {
 
-        logger.info("TestReadWithoutOpen ...");
+        logger.info("TestReadWithoutOpen ========================================================");
         TleDb db = new TleDb();
         try {
             int count = db.getElsetCount();
@@ -83,7 +83,7 @@ public class TestTleDB {
     @Test(priority = 3)
     public void TestElsetParameters() {
 
-        logger.info("TestElsetParameters ...");
+        logger.info("TestElsetParameters ========================================================");
         TleDb db = new TleDb();
         try {
             db.open();
@@ -120,7 +120,7 @@ public class TestTleDB {
     @Test (priority = 4, dependsOnMethods={"TestElsetParameters"})
     public void TestEmptyDatabase() {
 
-        logger.info("TestEmptyDatabase ...");
+        logger.info("TestEmptyDatabase ========================================================");
         TleDb db = new TleDb();
 
         try {
@@ -146,7 +146,8 @@ public class TestTleDB {
 
     @Test(priority = 5, dependsOnMethods={"TestElsetParameters"})
     public void TestDeleteOneElset() {
-        logger.info("TestDeleteOneElset ...");
+
+        logger.info("TestDeleteOneElset ========================================================");
         TleDb db = new TleDb();
 
         try {
@@ -170,6 +171,8 @@ public class TestTleDB {
 
     @Test(priority = 6, dependsOnMethods={"TestElsetParameters"})
     public void TestToJason() {
+
+        logger.info("TestToJason ========================================================");
 
         TleDb db = new TleDb();
         try {
@@ -200,6 +203,8 @@ public class TestTleDB {
 
     @Test(priority = 7, dependsOnMethods={"TestElsetParameters"})
     public void TestGetNonexistentElset() {
+
+        logger.info("TestGetNonexistentElset ========================================================");
 
         TleDb db = new TleDb();
         try {
