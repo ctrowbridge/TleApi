@@ -46,7 +46,16 @@ public class TleDb {
         logger.info("Close database ...");
         if (conn != null) {
             conn.close();
+            conn = null;
         }
+    }
+
+    public boolean isClosed() throws SQLException {
+        logger.info("Is database closed? ...");
+        if (conn == null) {
+            return true;
+        }
+        return conn.isClosed();
     }
 
     public void executeSql(String sql) throws Exception {
@@ -156,6 +165,7 @@ public class TleDb {
             logger.error("****** Error " + exp);
         }
 
+        statement.close();
         logger.info("count = " + count);
     }
 
@@ -176,8 +186,8 @@ public class TleDb {
         Statement statement = conn.createStatement();
         ResultSet result = statement.executeQuery(sql);
         result.next();
-
         String countStr = result.getString("1");
+        statement.close();
         return Integer.parseInt(countStr);
     }
 
@@ -205,6 +215,7 @@ public class TleDb {
             elsets.add(elset);
         }
 
+        statement.close();
         logger.debug("getElsets: count = " + count);
         return elsets;
     }
@@ -227,8 +238,10 @@ public class TleDb {
         ResultSet result = statement.executeQuery(sql);
         logger.info("getElset: result = " + result);
         if (result.next()) {
+            statement.close();
             return parseOneRow(result);
         } else {
+            statement.close();
             logger.error("getElset: element set not found " + satno);
             throw new Exception("Element set " + satno + " doesn't exist");
         }
@@ -251,6 +264,7 @@ public class TleDb {
         String sql = "SELECT * from TLEDB where satelliteNumber = " + satno;
         ResultSet result = statement.executeQuery(sql);
         logger.info("ifElsetExists: result = " + result);
+        statement.close();
         if (result.next()) {
             return true;
         }
@@ -289,6 +303,7 @@ public class TleDb {
         Statement statement = conn.createStatement();
         String sql = "TRUNCATE table TLEDB";
         boolean result = statement.execute(sql);
+        statement.close();
         logger.debug("emptyDb: result = " + result);
     }
 
@@ -301,6 +316,7 @@ public class TleDb {
         Statement statement = conn.createStatement();
         String sql = "DELETE from TLEDB where satelliteNumber = " + satno;
         int result = statement.executeUpdate(sql);
+        statement.close();
         logger.debug("emptyDb: result = " + result);
     }
 
@@ -339,5 +355,4 @@ public class TleDb {
         String str = row.getString(columnName);
         return Double.parseDouble(str);
     }
-
 }

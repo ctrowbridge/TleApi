@@ -19,7 +19,11 @@ public class LoadDB {
         try {
             db.open();
             db.load("data\\2019-006.txt");
+            int count = db.getElsetCount();
             db.close();
+
+            logger.info(" Database is created and loaded with " + count
+            + " element sets");
 
         } catch (Exception e) {
             logger.error("Exception: " + e);

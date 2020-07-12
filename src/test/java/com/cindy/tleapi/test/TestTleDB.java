@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -54,13 +55,16 @@ public class TestTleDB {
             Assert.assertEquals(count, 0);
             String productName = db.getDatabaseProductName();
             logger.info("testNewDB: productName = " + productName);
-            db.close();
+            makeSureDatabaseIsOpenThenClose(db);
+
         } catch (Exception exp) {
             logger.error("**** Error: + " + exp);
+            logger.error("****   Make sure API is not running!");
+            //exp.printStackTrace();
         }
     }
 
-    @Test(priority = 2)
+    @Test(priority = 2, dependsOnMethods={"testNewDB"})
     public void TestReadWithoutOpen() {
 
         logger.info("TestReadWithoutOpen ...");
@@ -69,9 +73,10 @@ public class TestTleDB {
             int count = db.getElsetCount();
             logger.info("count = " + count);
             Assert.assertEquals(count, 0);
-            db.close();
+            makeSureDatabaseIsOpenThenClose(db);
         } catch (Exception exp) {
             logger.error("**** Error: + " + exp);
+            logger.error("****   Make sure API is not running!");
         }
     }
 
@@ -104,10 +109,11 @@ public class TestTleDB {
             Assert.assertEquals(elset.getMeanMotion(), meanMotionExpected);
             Assert.assertEquals(elset.getRevolutionNum(), revNoExpected);
 
-            db.close();
+            makeSureDatabaseIsOpenThenClose(db);
 
         } catch (Exception exp) {
             logger.error("**** Error: + " + exp);
+            logger.error("****   Make sure API is not running!");
         }
     }
 
@@ -130,14 +136,15 @@ public class TestTleDB {
             count = db.getElsetCount();
             logger.info("count = " + count);
             Assert.assertEquals(count, 0);
+            makeSureDatabaseIsOpenThenClose(db);
 
-            db.close();
         } catch (Exception exp) {
             logger.error("**** Error: + " + exp);
+            logger.error("****   Make sure API is not running!");
         }
     }
 
-    @Test(priority = 5, dependsOnMethods={"TestEmptyDatabase"})
+    @Test(priority = 5, dependsOnMethods={"TestElsetParameters"})
     public void TestDeleteOneElset() {
         logger.info("TestDeleteOneElset ...");
         TleDb db = new TleDb();
@@ -154,13 +161,14 @@ public class TestTleDB {
             logger.info("count = " + count);
             Assert.assertEquals(count, 6);
             db.getElset(44383);
-            db.close();
+            makeSureDatabaseIsOpenThenClose(db);
         } catch (Exception exp) {
             logger.error("**** Error: + " + exp);
+            logger.error("****   Make sure API is not running!");
         }
     }
 
-    @Test(priority = 6, dependsOnMethods={"TestDeleteOneElset"})
+    @Test(priority = 6, dependsOnMethods={"TestElsetParameters"})
     public void TestToJason() {
 
         TleDb db = new TleDb();
@@ -172,6 +180,7 @@ public class TestTleDB {
             TwoLineElementSet elset = elsets.get(0);
             String jsonStr = elset.toJson();
             logger.info("TestToJson:  jsonStr = \n" + jsonStr);
+            makeSureDatabaseIsOpenThenClose(db);
 
             boolean jsonParsed = true;
             try{
@@ -185,10 +194,11 @@ public class TestTleDB {
 
         } catch (Exception exp) {
             logger.error("**** Error: + " + exp);
+            logger.error("****   Make sure API is not running!");
         }
     }
 
-    @Test(priority = 7, dependsOnMethods={"TestToJason"})
+    @Test(priority = 7, dependsOnMethods={"TestElsetParameters"})
     public void TestGetNonexistentElset() {
 
         TleDb db = new TleDb();
@@ -201,11 +211,18 @@ public class TestTleDB {
             Assert.assertFalse(exists);
 
             TwoLineElementSet elset = db.getElset(1);
+            makeSureDatabaseIsOpenThenClose(db);
             Assert.fail();
 
         } catch (Exception exp) {
             logger.error("**** Error: + " + exp);
             Assert.assertTrue(true);
         }
+    }
+
+    private void makeSureDatabaseIsOpenThenClose(TleDb db) throws Exception {
+        Assert.assertFalse(db.isClosed());
+        db.close();
+        Assert.assertTrue(db.isClosed());
     }
 }

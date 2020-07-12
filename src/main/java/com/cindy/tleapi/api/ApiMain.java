@@ -50,6 +50,7 @@ public class ApiMain {
 
         TleDb tledb = new TleDb();
         elsets = tledb.getElsets();
+        tledb.close();
 
         logger.info("Api::main:  elsets loaded, count = " + elsets.size());
     }
