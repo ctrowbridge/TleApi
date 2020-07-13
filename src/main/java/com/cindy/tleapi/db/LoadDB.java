@@ -9,16 +9,24 @@ import org.apache.logging.log4j.Logger;
 public class LoadDB {
 
     private static final Logger logger = LogManager.getLogger();
+    private static final String defaultFileName = "data\\2019-006.txt";
 
     public static void main(String[] args) {
 
         logger.info("<><><> LoadTleDB <><><>");
+        logger.info("args.length = " + args.length);
+        String fileName = defaultFileName;
+        if (args.length > 0) {
+            fileName = args[0];
+        }
+        logger.info("fileName = \"" + fileName + "\"");
 
         TleDb db = new TleDb();
 
         try {
             db.open();
-            db.load("data\\2019-006.txt");
+            db.emptyDb();
+            db.load(fileName);
             int count = db.getElsetCount();
             db.close();
 

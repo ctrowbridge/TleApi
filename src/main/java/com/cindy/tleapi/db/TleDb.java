@@ -125,6 +125,7 @@ public class TleDb {
 
         try {
             File inFile = new File(filename);
+            logger.info("inFile path = " + inFile.getAbsolutePath());
             Scanner sc = new Scanner(inFile);
 
             while (sc.hasNextLine()) {

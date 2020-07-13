@@ -26,10 +26,18 @@ TBD
 * To update Maven dependencies and compile:
 
     `> mvn compile`
-* To create and load the database,   run the *LoadDB* class
-in the  **com.cindy.tleapi.db** package.
+* To create and load the database, run the *LoadDB* class
+in the  **com.cindy.tleapi.db** package:
 
     `> mvn exec:java -Dexec.cleanupDaemonThreads=false -Dexec.mainClass="com.cindy.tleapi.db.LoadDB"`
+    
+This defaults to the "2019-006.txt" file in the data directory. If you want to import another element file:
+
+    `> mvn exec:java -Dexec.cleanupDaemonThreads=false -Dexec.mainClass="com.cindy.tleapi.db.LoadDB" -Dexec.args=<file name>"`
+    
+For example:
+
+    `> mvn exec:java -Dexec.cleanupDaemonThreads=false -Dexec.mainClass="com.cindy.tleapi.db.LoadDB" -Dexec.args="data\goes.txt"
     
 * To run unit tests on the database, run the *TestTleDB* class
 in the **com.cindy.tleapi.test** package.

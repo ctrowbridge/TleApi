@@ -354,7 +354,6 @@ public class TwoLineElementSet implements ElementSet {
     private Angle parseAngle(String line, int start, int end) {
 
         String angleStr = line.substring(start, end);
-        logger.debug("parseLine2: angleStr = \"" + angleStr + "\"");
         double angleDeg = Double.parseDouble(angleStr);
         return new Angle(angleDeg, Angle.AngleUnits.DEGREES);
     }
