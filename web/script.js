@@ -12,7 +12,7 @@ function compareEcc(a, b) {
         if (a.eccentricity > b.eccentricity) return -1;
         if (b.eccentricity > a.eccentricity) return 1;
     }
-    document.getElementById("demo").innerHTML = "Sort by eccentricity " + sortOrderEcc;
+    //document.getElementById("demo").innerHTML = "Sort by eccentricity " + sortOrderEcc;
 }
 
 function onSortEcc() {
@@ -32,7 +32,7 @@ function compareSatno(a, b) {
         if (a.satelliteNumber > b.satelliteNumber) return -1;
         if (b.satelliteNumber > a.satelliteNumber) return 1;
     }
-    document.getElementById("demo").innerHTML = "Sort by satellite " + sortOrderSat;
+    //document.getElementById("demo").innerHTML = "Sort by satellite " + sortOrderSat;
 }
 
 function onSortSatno() {
@@ -43,6 +43,17 @@ function onSortSatno() {
     loadTable();
 }
 
+function addSortButtons() {
+
+    var columnHTML = document.getElementById("sat-num-column").innerHTML;
+    columnHTML += '<button id="sort-sat-num" onclick="onSortSatno()"><i class="material-icons tiny">sort</i></button>';
+    document.getElementById("sat-num-column").innerHTML = columnHTML;
+
+    columnHTML = document.getElementById("ecc-num-column").innerHTML;
+    columnHTML += '<button id="sort-ecc" onclick="onSortEcc()"><i class="material-icons tiny">sort</i></button>';
+    document.getElementById("ecc-num-column").innerHTML = columnHTML;
+}
+
 function loadTable() {
 
     document.getElementById("elsets").innerHTML = "";
@@ -51,10 +62,10 @@ function loadTable() {
                 <tr border="2">
                 <th>Class</th>
                 <th>Name</th>
-                <th>Satellite<br>Number <button onclick="onSortSatno()"><i class="material-icons tiny">sort</i></button></th>
+                <th id="sat-num-column">Satellite<br>Number</th>
                 <th>International<br>Designator</th>
                 <th>Epoch<br>[YY DDD.DDDDDD]</th>
-                <th>Eccentricity <button onclick="onSortEcc()"><i class="material-icons tiny">sort</i></button></th>
+                <th id="ecc-num-column">Eccentricity </th>
                 <th>Inclination<br>[deg]</th>
                 <th>Right Ascension<br>[deg]</th>
                 <th>Argument of Perigee<br>[deg]</th>
@@ -89,6 +100,7 @@ function loadTable() {
     var tblbottom = "</tbody></table>";
     var tbl = tbltop + main + tblbottom;
     document.getElementById("elsets").innerHTML = tbl;
+    addSortButtons();
 }
 
 function loadElsets() {
