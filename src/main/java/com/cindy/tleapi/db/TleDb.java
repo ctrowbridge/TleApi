@@ -136,28 +136,7 @@ public class TleDb {
                 TwoLineElementSet elset = new TwoLineElementSet();
                 elset.importElset(line0, line1, line2);
 
-                String sql = "insert into tledb values ";
-
-                sql += "(";
-                sql += elset.getSatelliteNumber() + ", ";
-                sql += "'" + elset.getName() + "', ";
-                sql += "'" + elset.getClassification() + "', ";
-                sql += "'" + elset.getInternationalDesignator() + "', ";
-                sql += elset.getEpochYear() + ", ";
-                sql += elset.getEpochDay() + ", ";
-                sql += elset.getMeanMotionDeriv1() + ", ";
-                sql += elset.getMeanMotionDeriv2() + ", ";
-                sql += elset.getBstar() + ", ";
-                sql += elset.getElementSetNum() + ", ";
-                sql += elset.getInclination().getDegrees() + ", ";
-                sql += elset.getRightAscension().getDegrees() + ", ";
-                sql += elset.getEccentricity() + ", ";
-                sql += elset.getArgumentOfPerigee().getDegrees() + ", ";
-                sql += elset.getMeanAnomaly().getDegrees() + ", ";
-                sql += elset.getMeanMotion() + ", ";
-                sql += elset.getRevolutionNum();
-                sql += ")";
-
+                String sql = getAddSql(elset);
                 logger.info("sql = \"" + sql + "\"");
                 statement.execute(sql);
             }
@@ -266,6 +245,10 @@ public class TleDb {
         ResultSet result = statement.executeQuery(sql);
         logger.info("ifElsetExists: result = " + result);
         statement.close();
+
+        if (result.isClosed()) {
+            return false;
+        }
         if (result.next()) {
             return true;
         }
@@ -319,6 +302,47 @@ public class TleDb {
         int result = statement.executeUpdate(sql);
         statement.close();
         logger.debug("emptyDb: result = " + result);
+    }
+
+    public void addElset(TwoLineElementSet elset) throws Exception {
+
+        logger.info("addElset: elset = " + elset);
+        if (conn == null) {
+            open();
+        }
+        Statement statement = conn.createStatement();
+        String sql = getAddSql(elset);
+        logger.info("sql = \"" + sql + "\"");
+        statement.execute(sql);
+        statement.close();
+        logger.debug("addElset: ");
+    }
+
+    private String getAddSql(TwoLineElementSet elset) {
+
+        String sql = "insert into tledb values ";
+
+        sql += "(";
+        sql += elset.getSatelliteNumber() + ", ";
+        sql += "'" + elset.getName() + "', ";
+        sql += "'" + elset.getClassification() + "', ";
+        sql += "'" + elset.getInternationalDesignator() + "', ";
+        sql += elset.getEpochYear() + ", ";
+        sql += elset.getEpochDay() + ", ";
+        sql += elset.getMeanMotionDeriv1() + ", ";
+        sql += elset.getMeanMotionDeriv2() + ", ";
+        sql += elset.getBstar() + ", ";
+        sql += elset.getElementSetNum() + ", ";
+        sql += elset.getInclination().getDegrees() + ", ";
+        sql += elset.getRightAscension().getDegrees() + ", ";
+        sql += elset.getEccentricity() + ", ";
+        sql += elset.getArgumentOfPerigee().getDegrees() + ", ";
+        sql += elset.getMeanAnomaly().getDegrees() + ", ";
+        sql += elset.getMeanMotion() + ", ";
+        sql += elset.getRevolutionNum();
+        sql += ")";
+
+        return sql;
     }
 
     private TwoLineElementSet parseOneRow(ResultSet row) throws SQLException {
