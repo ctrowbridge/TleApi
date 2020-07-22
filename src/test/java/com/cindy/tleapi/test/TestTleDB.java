@@ -42,6 +42,10 @@ public class TestTleDB {
 
     private final String testFileName = "data\\2019-006.txt";
 
+    private final String testLine1 = "LCS 1                   ";
+    private final String testLine2 = "1 01361U 65034C   20199.53569372  .00000028  00000-0  25492-2 0  9994";
+    private final String testLine3 = "2 01361  32.1395 267.1291 0005455 248.0922 111.8996  9.89297492995906";
+
     @Test(priority = 1)
     public void testNewDB() {
 
@@ -212,17 +216,46 @@ public class TestTleDB {
             db.createTable();
             db.load(testFileName);
 
-            boolean exists = db.ifElsetExists(1);
+            boolean exists = db.ifElsetExists(1361);
+            Assert.assertTrue(exists);
+            makeSureDatabaseIsOpenThenClose(db);
+
+        } catch (Exception exp) {
+            logger.error("**** Error: + " + exp);
+            Assert.fail();
+        }
+    }
+
+    @Test(priority = 8, dependsOnMethods={"TestElsetParameters"})
+    public void TestAddElset() {
+
+        logger.info("TestAddElset ========================================================");
+
+        TwoLineElementSet elset = new TwoLineElementSet();
+        elset.importElset(testLine1, testLine2, testLine3);
+
+        TleDb db = new TleDb();
+        try {
+            db.open();
+            db.createTable();
+            int count = db.getElsetCount();
+            logger.info("TestAddElset:  count = " + count);
+            Assert.assertEquals(count, 0);
+            db.addElset(elset);
+
+            boolean exists = db.ifElsetExists( 1);
             Assert.assertFalse(exists);
 
-            TwoLineElementSet elset = db.getElset(1);
+            count = db.getElsetCount();
+            Assert.assertEquals(count, 1);
+
             makeSureDatabaseIsOpenThenClose(db);
-            Assert.fail();
 
         } catch (Exception exp) {
             logger.error("**** Error: + " + exp);
             Assert.assertTrue(true);
         }
+
     }
 
     private void makeSureDatabaseIsOpenThenClose(TleDb db) throws Exception {
