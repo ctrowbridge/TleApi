@@ -28,6 +28,231 @@
 				"description": "Initial GET"
 			},
 			"response": []
+		},
+		{
+			"name": "GET elsets",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a22ae586-d9e3-4463-938e-8e12051f0b24",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8981/elsets",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8981",
+					"path": [
+						"elsets"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET valid satellite",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "761081df-c284-4ccf-8195-ba2639a4f128",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Check satelliteNumber\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.satelliteNumber).to.eql(44382);",
+							"});",
+							"",
+							"pm.test(\"Check satelliteNumber\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.revolutionNum).to.eql(6057);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8981/elsets/44382",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8981",
+					"path": [
+						"elsets",
+						"44382"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET satellite not found",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "974ab9ac-b98e-45d8-83ce-64f0bd4326d9",
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8981/elsets/123",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8981",
+					"path": [
+						"elsets",
+						"123"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET invalid satellite number",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e5d6dea7-4bf9-4867-b54d-444abdfcc6f7",
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {",
+							"    pm.response.to.have.status(400);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8981/elsets/xyz",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8981",
+					"path": [
+						"elsets",
+						"xyz"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST with path params",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8981/elsets/TEMPSAT 1               /1 00900U 64063C   20199.53174448  .00000207  00000-0  21239-3 0  9994/2 00900  90.1522  28.8730 0026176 330.4877  57.3871 13.73393904774586",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8981",
+					"path": [
+						"elsets",
+						"TEMPSAT 1               ",
+						"1 00900U 64063C   20199.53174448  .00000207  00000-0  21239-3 0  9994",
+						"2 00900  90.1522  28.8730 0026176 330.4877  57.3871 13.73393904774586"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST with query params",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8981/elsets/?line1=TEMPSAT 1              &line2=1 00900U 64063C   20199.53174448  .00000207  00000-0  21239-3 0  9994&line3=2 00900  90.1522  28.8730 0026176 330.4877  57.3871 13.73393904774586",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8981",
+					"path": [
+						"elsets",
+						""
+					],
+					"query": [
+						{
+							"key": "line1",
+							"value": "TEMPSAT 1              "
+						},
+						{
+							"key": "line2",
+							"value": "1 00900U 64063C   20199.53174448  .00000207  00000-0  21239-3 0  9994"
+						},
+						{
+							"key": "line3",
+							"value": "2 00900  90.1522  28.8730 0026176 330.4877  57.3871 13.73393904774586"
+						}
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }

@@ -68,12 +68,45 @@ public class ApiMain {
 
     private static void createRoutes() {
 
+        logger.info("ApiMain::createRoutes:");
+
         app.get("", ctx -> {
             ctx.result("Starting to create the API ...");
         });
 
         createGetRoute();
         createGetRouteWithParameter();
+        createPostRoute();
+    }
+
+    private static void createPostRoute() {
+
+        logger.info("ApiMain::createPostRoute:");
+
+        //app.post("/elsets/:line1/:line2/:line3", ctx -> {
+        app.post("/elsets/", ctx -> {
+
+            logger.info("ApiMain::createPostRoute: post called");
+
+            String line1 = ctx.queryParam("line1");
+            String line2 = ctx.queryParam("line2");
+            String line3 = ctx.queryParam("line3");
+
+            logger.info("ApiMain::createPostRoute:  line1 = \"" + line1 + "\"");
+            logger.info("ApiMain::createPostRoute:  line2 = \"" + line2 + "\"");
+            logger.info("ApiMain::createPostRoute:  line3 = \"" + line3 + "\"");
+
+            TwoLineElementSet postElementSet = new TwoLineElementSet();
+            postElementSet.importElset(line1, line2, line3);
+            logger.info("ApiMain::createPostRoute:  postElementSet = " + postElementSet);
+
+            TleDb tledb = new TleDb();
+            tledb.open();
+            tledb.close();
+
+            ctx.result("TODO").status(200);
+
+        });
     }
 
     /**
@@ -81,8 +114,13 @@ public class ApiMain {
      */
     private static void createGetRoute() {
 
+        logger.info("ApiMain::createGetRoute:");
+
         // TODO Replace String with StringBuffer
         app.get("/elsets", ctx -> {
+
+            logger.info("ApiMain::createGetRoute:  get called");
+
             String resultStr = "[\n\t";
             for (TwoLineElementSet elset : elsets) {
                 resultStr = resultStr + elset.toJson() + ",\n";
@@ -103,7 +141,12 @@ public class ApiMain {
      */
     private static void createGetRouteWithParameter() {
 
+        logger.info("ApiMain::createGetRouteWithParameter:");
+
         app.get("/elsets/:satno", ctx -> {
+
+            logger.info("ApiMain::createGetRouteWithParameter:  get called");
+
             int satno = -1;
             try {
                 int statusCode = 200;
