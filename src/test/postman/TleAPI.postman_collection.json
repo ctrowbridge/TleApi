@@ -2,6 +2,7 @@
 	"info": {
 		"_postman_id": "249d8101-2059-49fb-906c-d2c99971f462",
 		"name": "TleAPI",
+		"description": "# Introduction\n\nA REST API to retrieve Two Line Element sets.\n\n# Error Codes",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -25,7 +26,7 @@
 						""
 					]
 				},
-				"description": "Initial GET"
+				"description": "GET for root directory."
 			},
 			"response": []
 		},
@@ -62,12 +63,13 @@
 					"path": [
 						"elsets"
 					]
-				}
+				},
+				"description": "GET all elsets in JSON format."
 			},
 			"response": []
 		},
 		{
-			"name": "GET valid satellite",
+			"name": "GET valid element set",
 			"event": [
 				{
 					"listen": "test",
@@ -110,12 +112,13 @@
 						"elsets",
 						"44382"
 					]
-				}
+				},
+				"description": "Get one valid element set."
 			},
 			"response": []
 		},
 		{
-			"name": "GET satellite not found",
+			"name": "GET element set not found",
 			"event": [
 				{
 					"listen": "test",
@@ -148,12 +151,13 @@
 						"elsets",
 						"123"
 					]
-				}
+				},
+				"description": "GET one element set that doesn't exist.\n\nShould return 404."
 			},
 			"response": []
 		},
 		{
-			"name": "GET invalid satellite number",
+			"name": "GET invalid element set number",
 			"event": [
 				{
 					"listen": "test",
@@ -186,7 +190,8 @@
 						"elsets",
 						"xyz"
 					]
-				}
+				},
+				"description": "GET one element set with an invalid element set number.\n\nShould return a 400."
 			},
 			"response": []
 		},
@@ -212,7 +217,8 @@
 						"1 00900U 64063C   20199.53174448  .00000207  00000-0  21239-3 0  9994",
 						"2 00900  90.1522  28.8730 0026176 330.4877  57.3871 13.73393904774586"
 					]
-				}
+				},
+				"description": "POST with path parameters.  OBSOLETE - for testing only - not a valid request!"
 			},
 			"response": []
 		},
@@ -250,7 +256,8 @@
 							"value": "2 00900  90.1522  28.8730 0026176 330.4877  57.3871 13.73393904774586"
 						}
 					]
-				}
+				},
+				"description": "POST with query parameters to add one element set."
 			},
 			"response": []
 		}
