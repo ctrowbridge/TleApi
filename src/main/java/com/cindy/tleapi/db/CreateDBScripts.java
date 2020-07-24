@@ -1,5 +1,6 @@
 package com.cindy.tleapi.db;
 
+import com.cindy.tleapi.astro.AstroException;
 import com.cindy.tleapi.astro.TwoLineElementSet;
 
 import java.io.*;
@@ -179,7 +180,7 @@ public class CreateDBScripts {
             }
             pWriter.println(";");
 
-        } catch (FileNotFoundException e) {
+        } catch (FileNotFoundException | AstroException e) {
             e.printStackTrace();
         }
     }
