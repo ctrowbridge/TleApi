@@ -1,5 +1,6 @@
 package com.cindy.tleapi.test;
 
+import com.cindy.tleapi.astro.AstroException;
 import com.cindy.tleapi.astro.TwoLineElementSet;
 import com.cindy.tleapi.db.TleDb;
 import com.google.gson.JsonParser;
@@ -217,7 +218,13 @@ public class TestTleDB {
             db.load(testFileName);
 
             boolean exists = db.ifElsetExists(1361);
+            logger.info("TestGetNonexistentElset: exists = " + exists);
+            Assert.assertFalse(exists);
+
+            exists = db.ifElsetExists(44463);
+            logger.info("TestGetNonexistentElset: exists = " + exists);
             Assert.assertTrue(exists);
+
             makeSureDatabaseIsOpenThenClose(db);
 
         } catch (Exception exp) {
@@ -227,7 +234,7 @@ public class TestTleDB {
     }
 
     @Test(priority = 8, dependsOnMethods={"TestElsetParameters"})
-    public void TestAddElset() {
+    public void TestAddElset() throws AstroException {
 
         logger.info("TestAddElset ========================================================");
 
