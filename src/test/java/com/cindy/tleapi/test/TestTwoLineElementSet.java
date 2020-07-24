@@ -1,6 +1,7 @@
 package com.cindy.tleapi.test;
 
 import com.cindy.tleapi.astro.Angle;
+import com.cindy.tleapi.astro.AstroException;
 import com.cindy.tleapi.astro.TwoLineElementSet;
 
 import org.apache.logging.log4j.LogManager;
@@ -62,6 +63,9 @@ public class TestTwoLineElementSet {
     private final static String line51 = "1 23581U 95025A   07064.44075725 -.00000113  00000-0  10000-3 0  9250";
     private final static String line52 = "2 23581   3.0539  81.7939 0005013 249.2363 150.1602  1.00273272 43169";
 
+    // Test base line number
+    private final static String badLine11 = "5 02866U 67066E   20199.07041537 -.00000100  00000-0  00000-0 0  9997";
+    private final static String badLine12 = "2 02866   2.7925 272.9117 0052904 357.0203 111.7877  1.09426056107382";
     /**
      * CREATION_DATE = 2007-065T16:00:00
      * ORIGINATOR = NOAA/USA
@@ -97,6 +101,8 @@ public class TestTwoLineElementSet {
      * MEAN_MOTION_DOT = -0.00000113
      * MEAN_MOTION_DDOT = 0.0
      */
+
+
 
     @Test
     public void testConstructor2() {
@@ -135,7 +141,7 @@ public class TestTwoLineElementSet {
     }
 
     @Test
-    public void testImport2() {
+    public void testImport2() throws AstroException {
 
         TwoLineElementSet elset = new TwoLineElementSet();
 
@@ -161,7 +167,7 @@ public class TestTwoLineElementSet {
     }
 
     @Test
-    public void testImport3() {
+    public void testImport3() throws AstroException {
 
         TwoLineElementSet elset = new TwoLineElementSet();
 
@@ -177,7 +183,7 @@ public class TestTwoLineElementSet {
     }
 
     @Test
-    public void testImportNegativeBstar() {
+    public void testImportNegativeBstar() throws AstroException {
 
         TwoLineElementSet elset = new TwoLineElementSet();
 
@@ -188,7 +194,7 @@ public class TestTwoLineElementSet {
     }
 
     @Test
-    public void testImportOMM() {
+    public void testImportOMM() throws AstroException {
 
         TwoLineElementSet elset = new TwoLineElementSet();
 
@@ -198,6 +204,15 @@ public class TestTwoLineElementSet {
         Assert.assertEquals(elset.getName().trim(), nameExpected_5.trim());
         Assert.assertEquals(elset.getRevolutionNum(), revNumExpected_5);
         Assert.assertEquals(elset.getInternationalDesignator(), intlDesExpected_5);
+    }
+
+    @Test(expectedExceptions = AstroException.class)
+    public void testBaseLineNumberLine1() throws AstroException {
+
+        TwoLineElementSet elset = new TwoLineElementSet();
+        elset.importElset(badLine11, badLine12);
+
+        Assert.fail();
     }
 
 }

@@ -233,7 +233,7 @@ public class TwoLineElementSet implements ElementSet {
     /**
      * Import from two line ASCII element set
      */
-    public void importElset(String line1, String line2) {
+    public void importElset(String line1, String line2) throws AstroException {
 
         parseLine1(line1);
         parseLine2(line2);
@@ -242,7 +242,7 @@ public class TwoLineElementSet implements ElementSet {
     /**
      * Import from three line ASCII element set. Line 1 contains satellite name
      */
-    public void importElset(String line1, String line2, String line3) {
+    public void importElset(String line1, String line2, String line3) throws AstroException {
 
         line1 = StringUtils.rightPad(line1, 80, " ");
         name = line1.substring(0, 24);
@@ -251,7 +251,7 @@ public class TwoLineElementSet implements ElementSet {
         parseLine2(line3);
     }
 
-    private void parseLine1(String line1) {
+    private void parseLine1(String line1) throws AstroException {
 
         //System.out.println("*** parseLine1: line1 = \"" + line1 + "\"");
 
@@ -286,14 +286,19 @@ public class TwoLineElementSet implements ElementSet {
         elementSetNum = Integer.parseInt(elementSetNumStr);
     }
 
-    private void parseLineNumber(String line, int expectedLineNumber) {
+    private void parseLineNumber(String line, int expectedLineNumber) throws AstroException {
 
         String lineNumberStr = line.substring(0, 1);
         logger.debug("parseLine1: lineNumberStr = \"" + lineNumberStr + "\"");
         int lineNumber = Integer.parseInt(lineNumberStr);
         logger.debug("parseLine1: lineNumber = " + lineNumber);
 
-        // TODO: validate line number
+        if (lineNumber != expectedLineNumber) {
+            String errMessage = "lineNumber (" + lineNumber + ") doesn't match expectedLineNumber (" + expectedLineNumber
+            + ")";
+            logger.error(errMessage);
+            throw new AstroException(1, errMessage);
+        }
     }
 
     private int parseSatNo(String line) {
@@ -303,6 +308,7 @@ public class TwoLineElementSet implements ElementSet {
         satNumberStr = satNumberStr.stripLeading();
         return Integer.parseInt(satNumberStr);
     }
+
     private void parseMeanMotionDeriv2(String line1) {
 
         String meanMotionDeriv2Str = line1.substring(44, 50);
@@ -329,7 +335,7 @@ public class TwoLineElementSet implements ElementSet {
         bstar = bstar*Math.pow(10, exp);
     }
 
-    private void parseLine2(String line2) {
+    private void parseLine2(String line2) throws AstroException {
 
         logger.debug("parseLine2: line2 = \"" + line2 + "\"");
 

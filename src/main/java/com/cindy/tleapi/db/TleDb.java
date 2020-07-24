@@ -244,12 +244,13 @@ public class TleDb {
         String sql = "SELECT * from TLEDB where satelliteNumber = " + satno;
         ResultSet result = statement.executeQuery(sql);
         logger.info("ifElsetExists: result = " + result);
-        statement.close();
 
         if (result.isClosed()) {
+            statement.close();
             return false;
         }
         if (result.next()) {
+            statement.close();
             return true;
         }
         return false;

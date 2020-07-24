@@ -1,5 +1,6 @@
 package com.cindy.tleapi.api;
 
+import com.cindy.tleapi.astro.AstroException;
 import com.cindy.tleapi.astro.TwoLineElementSet;
 import com.cindy.tleapi.db.TleDb;
 import io.javalin.Javalin;
@@ -83,7 +84,6 @@ public class ApiMain {
 
         logger.info("ApiMain::createPostRoute:");
 
-        //app.post("/elsets/:line1/:line2/:line3", ctx -> {
         app.post("/elsets/", ctx -> {
 
             logger.info("ApiMain::createPostRoute: post called");
@@ -96,15 +96,41 @@ public class ApiMain {
             logger.info("ApiMain::createPostRoute:  line2 = \"" + line2 + "\"");
             logger.info("ApiMain::createPostRoute:  line3 = \"" + line3 + "\"");
 
+            String resultStr = "";
+            int statusCode = 0;
             TwoLineElementSet postElementSet = new TwoLineElementSet();
-            postElementSet.importElset(line1, line2, line3);
-            logger.info("ApiMain::createPostRoute:  postElementSet = " + postElementSet);
+            try {
+                postElementSet.importElset(line1, line2, line3);
+                logger.info("ApiMain::createPostRoute:  postElementSet = " + postElementSet);
 
-            TleDb tledb = new TleDb();
-            tledb.open();
-            tledb.close();
+                TleDb tledb = new TleDb();
+                tledb.open();
+                boolean exists = tledb.ifElsetExists(postElementSet.getSatelliteNumber());
+                logger.info("ApiMain::createPostRoute:  exists = " + exists);
 
-            ctx.result("TODO").status(200);
+                if (!exists) {
+                    logger.info("ApiMain::createPostRoute:  adding elset ...");
+                    tledb.addElset(postElementSet);
+                    resultStr = "elset " + postElementSet.getSatelliteNumber() + " added";
+                    statusCode = 200;
+                } else {
+                    logger.info("ApiMain::createPostRoute:  elset already exists ...");
+                    resultStr = "elset " + postElementSet.getSatelliteNumber() + " alread exists!";
+                    statusCode = 400;
+                }
+                tledb.close();
+
+            } catch (AstroException exp) {
+
+                logger.info("ApiMain::createPostRoute:  AstroException - " + exp.getId() + " - " +
+                        exp.getDescription());
+
+                resultStr = exp.getDescription();
+                statusCode = 404;
+            }
+
+            logger.info("ApiMain::createPostRoute:  resultStr = " + resultStr + ", statusCode = " + statusCode);
+            ctx.result(resultStr).status(statusCode);
 
         });
     }
