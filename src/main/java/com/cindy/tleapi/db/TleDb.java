@@ -1,6 +1,7 @@
 package com.cindy.tleapi.db;
 
 import com.cindy.tleapi.astro.Angle;
+import com.cindy.tleapi.astro.AstroException;
 import com.cindy.tleapi.astro.TwoLineElementSet;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,8 +14,7 @@ import java.util.Scanner;
 
 
 /**
- * Opens, creates and loads the TLE database.
- * TODO:  Add update
+ * Wrapper for the TLEDB. Opens, creates, loads, updates and clears the TLE database.
  */
 public class TleDb {
 
@@ -28,7 +28,7 @@ public class TleDb {
     /**
      * Connects to the database.
      *
-     * @throws Exception
+     * @throws Exception thrown if an error occurs while connection to database
      */
     public void open() throws Exception {
 
@@ -40,7 +40,7 @@ public class TleDb {
     /**
      * Closes the database.
      *
-     * @throws Exception
+     * @throws Exception thrown if an error occurs while closing database
      */
     public void close() throws Exception {
         logger.info("Close database ...");
@@ -50,6 +50,12 @@ public class TleDb {
         }
     }
 
+    /**
+     * Checks to see if database is closed.
+     *
+     * @return true if closed, false otherwise
+     * @throws SQLException thrown if an error occurs check to see if connection is closed
+     */
     public boolean isClosed() throws SQLException {
         logger.info("Is database closed? ...");
         if (conn == null) {
@@ -58,7 +64,7 @@ public class TleDb {
         return conn.isClosed();
     }
 
-    public void executeSql(String sql) throws Exception {
+    private void executeSql(String sql) throws Exception {
 
         Statement statement = conn.createStatement();
         logger.info("Execute statement= " + statement);
@@ -68,7 +74,7 @@ public class TleDb {
     /**
      * Creates the TLEDB table.
      *
-     * @throws Exception
+     * @throws Exception thrown if an error occurs create the TLEDB table.
      */
     public void createTable() throws Exception {
 
@@ -112,7 +118,7 @@ public class TleDb {
      * Existing data is not deleted.
      *
      * @param filename Input three line element set
-     * @throws Exception
+     * @throws Exception thrown if an error occurs loading the database
      */
     public void load(String filename) throws Exception {
 
@@ -150,10 +156,10 @@ public class TleDb {
     }
 
     /**
-     * Retrieves the number of element set in the TLEDB database.
+     * Retrieves the number of element sets in the TLEDB database.
      *
-     * @return
-     * @throws Exception
+     * @return the number of element sets in the TLEDB database
+     * @throws Exception thrown if an error occurs retrieving the element set count
      */
     public int getElsetCount() throws Exception {
 
@@ -175,7 +181,7 @@ public class TleDb {
      * Retrieves all element sets from database.
      *
      * @return A List of element sets.
-     * @throws Exception
+     * @throws Exception thrown if an error occurs retrieving element sets from the database
      */
     public List<TwoLineElementSet> getElsets() throws Exception {
 
@@ -201,13 +207,14 @@ public class TleDb {
     }
 
     /**
-     * Retrieves one element set from the database
+     * Retrieves one element set from the database.
      *
      * @param satno Element set number to retrieve
      * @return Element set
-     * @throws Exception Thrown when requested element set doesn't exist
+     * @throws Exception Thrown when an error occurs retrieving element set
+     * @throws AstroException Thrown when requested element set doesn't exist
      */
-    public TwoLineElementSet getElset(int satno) throws Exception {
+    public TwoLineElementSet getElset(int satno) throws Exception, AstroException {
 
         logger.info("getElset: " + satno);
         if (conn == null) {
@@ -223,7 +230,7 @@ public class TleDb {
         } else {
             statement.close();
             logger.error("getElset: element set not found " + satno);
-            throw new Exception("Element set " + satno + " doesn't exist");
+            throw new AstroException(2, "Element set " + satno + " doesn't exist");
         }
     }
 
@@ -232,7 +239,7 @@ public class TleDb {
      *
      * @param satno Input satellite number
      * @return True if the satellite number exists, false otherwise
-     * @throws Exception
+     * @throws Exception thrown if an error occurs
      */
     public boolean ifElsetExists(int satno) throws Exception {
 
@@ -257,10 +264,11 @@ public class TleDb {
     }
 
     /**
-     * Gets the database product name (e.g., "Apache Derby")
+     * Gets the database product name (e.g., "Apache Derby").
+     *
      * @return The database product name. Returns "Not Connected" is
      *         the database is not connected.
-     * @throws SQLException
+     * @throws SQLException Thrown if an error occurs retrieve metadata.
      */
     public String getDatabaseProductName() throws SQLException {
 
@@ -277,7 +285,7 @@ public class TleDb {
     /**
      * Removes all records from the database.
      *
-     * @throws Exception
+     * @throws Exception thrown when trying to empty database
      */
     public void emptyDb() throws Exception {
 
@@ -292,6 +300,12 @@ public class TleDb {
         logger.debug("emptyDb: result = " + result);
     }
 
+    /**
+     * Delets one element set from the database.
+     *
+     * @param satno element set number to delete
+     * @throws Exception thrown if an error occurs deleting element set
+     */
     public void deleteElset(int satno) throws Exception {
 
         logger.info("deleteElset: satno = " + satno);
@@ -305,6 +319,12 @@ public class TleDb {
         logger.debug("emptyDb: result = " + result);
     }
 
+    /**
+     * Adds an element set to the database.
+     *
+     * @param elset Element set to add to the database
+     * @throws Exception thrown if an error occurs in database
+     */
     public void addElset(TwoLineElementSet elset) throws Exception {
 
         logger.info("addElset: elset = " + elset);

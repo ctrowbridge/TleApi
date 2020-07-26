@@ -24,9 +24,10 @@ public class ApiMain {
     private static final Logger logger = LogManager.getLogger();
 
     /**
-     * Main app for the API.
+     * Main app for the API.  Uses Javalin to create an REST API with
+     * the following endpoints:  GET, GET with parameters, POST
      *
-     * @param args
+     * @param args Input arguments. Not currently used.
      */
     public static void main(String[] args) {
 

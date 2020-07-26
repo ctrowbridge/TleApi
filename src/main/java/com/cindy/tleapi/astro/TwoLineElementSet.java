@@ -232,6 +232,11 @@ public class TwoLineElementSet implements ElementSet {
 
     /**
      * Import from two line ASCII element set
+     *
+     * @param line1 Line 1 of two line element set to parse
+     * @param line2 Line 2 of two line element set to parse
+     *
+     * @throws AstroException if an error occurs parsing input lines
      */
     public void importElset(String line1, String line2) throws AstroException {
 
@@ -241,6 +246,12 @@ public class TwoLineElementSet implements ElementSet {
 
     /**
      * Import from three line ASCII element set. Line 1 contains satellite name
+     *
+     * @param line1 Line 1 of three card element set to parse
+     * @param line2 Line 2 of three card element set to parse
+     * @param line3 Line 3 of three card element set to parse
+     *
+     * @throws AstroException if an error occurs parsing input lines
      */
     public void importElset(String line1, String line2, String line3) throws AstroException {
 

@@ -12,6 +12,11 @@ public class CreateDB {
 
     private static final Logger logger = LogManager.getLogger();
 
+    /**
+     * Main app to create the TLEDB.
+     *
+     * @param args Not used.
+     */
     public static void main(String[] args) {
 
         logger.info("<><><> CreateDB <><><>");

@@ -1,5 +1,8 @@
 package com.cindy.tleapi.astro;
 
+/**
+ * Exception class for Astro package.
+ */
 public class AstroException extends Exception {
 
     private int id = 0;

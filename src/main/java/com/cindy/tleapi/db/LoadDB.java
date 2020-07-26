@@ -4,13 +4,21 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Opens and populates the TLEDB Database.
+ * Opens, clears and populates the TLEDB Database.
  */
 public class LoadDB {
 
     private static final Logger logger = LogManager.getLogger();
     private static final String defaultFileName = "data\\2019-006.txt";
 
+    /**
+     * Main app to load the TLEDB database. The database is cleared
+     * before loading.
+     *
+     * @param args Input command line arguments. If present, args[0] is
+     *             the input file name.  If not present, the file
+     *             "data\\2019-006.txt" is used.
+     */
     public static void main(String[] args) {
 
         logger.info("<><><> LoadTleDB <><><>");
@@ -30,7 +38,7 @@ public class LoadDB {
             int count = db.getElsetCount();
             db.close();
 
-            logger.info(" Database is created and loaded with " + count
+            logger.info(" Database was created and loaded with " + count
             + " element sets");
 
         } catch (Exception e) {
