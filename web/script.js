@@ -46,11 +46,11 @@ function onSortSatno() {
 function addSortButtons() {
 
     var columnHTML = document.getElementById("sat-num-column").innerHTML;
-    columnHTML += '<button id="sort-sat-num" onclick="onSortSatno()"><i class="material-icons tiny">sort</i></button>';
+    columnHTML += '<button id="sort-sat-num" onclick="onSortSatno()"><i aria-label="Sort by Satno" class="material-icons tiny">sort</i></button>';
     document.getElementById("sat-num-column").innerHTML = columnHTML;
 
     columnHTML = document.getElementById("ecc-num-column").innerHTML;
-    columnHTML += '<button id="sort-ecc" onclick="onSortEcc()"><i class="material-icons tiny">sort</i></button>';
+    columnHTML += '<button id="sort-ecc" onclick="onSortEcc()"><i aria-label = "Sort by Eccentricity" class="material-icons tiny">sort</i></button>';
     document.getElementById("ecc-num-column").innerHTML = columnHTML;
 }
 
