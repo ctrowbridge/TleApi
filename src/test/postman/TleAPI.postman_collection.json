@@ -260,6 +260,168 @@
 				"description": "POST with query parameters to add one element set."
 			},
 			"response": []
+		},
+		{
+			"name": "POST with bad line number",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2a3dee11-55ea-4a51-8fb5-e013163f540b",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8981/elsets/?line1=TEMPSAT 1              &line2=7 00900U 64063C   20199.53174448  .00000207  00000-0  21239-3 0  9994&line3=2 00900  90.1522  28.8730 0026176 330.4877  57.3871 13.73393904774586",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8981",
+					"path": [
+						"elsets",
+						""
+					],
+					"query": [
+						{
+							"key": "line1",
+							"value": "TEMPSAT 1              "
+						},
+						{
+							"key": "line2",
+							"value": "7 00900U 64063C   20199.53174448  .00000207  00000-0  21239-3 0  9994"
+						},
+						{
+							"key": "line3",
+							"value": "2 00900  90.1522  28.8730 0026176 330.4877  57.3871 13.73393904774586"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST missing line1 parameter",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8981/elsets/?line2=1 00900U 64063C   20199.53174448  .00000207  00000-0  21239-3 0  9994&line3=2 00900  90.1522  28.8730 0026176 330.4877  57.3871 13.73393904774586",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8981",
+					"path": [
+						"elsets",
+						""
+					],
+					"query": [
+						{
+							"key": "line2",
+							"value": "1 00900U 64063C   20199.53174448  .00000207  00000-0  21239-3 0  9994"
+						},
+						{
+							"key": "line3",
+							"value": "2 00900  90.1522  28.8730 0026176 330.4877  57.3871 13.73393904774586"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE non existant element set",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4356780f-5d80-4849-bcf2-6dc294c87c24",
+						"exec": [
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8981/elsets/12345",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8981",
+					"path": [
+						"elsets",
+						"12345"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE existing element set",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "37ae4965-8f90-4f14-b68a-545a84df67f6",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8981/elsets/8366",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8981",
+					"path": [
+						"elsets",
+						"8366"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }

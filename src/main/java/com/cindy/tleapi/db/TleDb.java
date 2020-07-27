@@ -316,7 +316,7 @@ public class TleDb {
         String sql = "DELETE from TLEDB where satelliteNumber = " + satno;
         int result = statement.executeUpdate(sql);
         statement.close();
-        logger.debug("emptyDb: result = " + result);
+        logger.debug("deleteElset: result = " + result);
     }
 
     /**

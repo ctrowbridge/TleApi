@@ -79,6 +79,42 @@ public class ApiMain {
         createGetRoute();
         createGetRouteWithParameter();
         createPostRoute();
+        createDeleteRoute();
+    }
+
+    private static void createDeleteRoute() {
+
+        logger.info("ApiMain::createDeleteRoute:");
+
+        app.delete("/elsets/:satno", ctx -> {
+
+            String resultStr = "";
+            int statusCode = 0;
+
+            int satno = Integer.parseInt(ctx.pathParam("satno"));
+            logger.info("ApiMain::createDeleteRoute: satno = " + satno);
+
+            TleDb tledb = new TleDb();
+            tledb.open();
+            boolean exists = tledb.ifElsetExists(satno);
+            if (!exists) {
+                resultStr = "element set " + satno + " doesn't exist";
+                statusCode = 404;
+                logger.error(resultStr);
+                ctx.result(resultStr).status(statusCode);
+                tledb.close();
+                logger.info("ApiMain::createDeleteRoute: satno not found!");
+                return;
+            }
+
+            logger.info("ApiMain::createDeleteRoute: delete satellite ...");
+            tledb.deleteElset(satno);
+            tledb.close();
+            resultStr = "element set " + satno + " deleted";
+            statusCode = 200;
+
+            ctx.result(resultStr).status(statusCode);
+        });
     }
 
     private static void createPostRoute() {
@@ -180,9 +216,6 @@ public class ApiMain {
         });
     }
 
-    /**
-     * Create route to get one elset
-     */
     private static void createGetRouteWithParameter() {
 
         logger.info("ApiMain::createGetRouteWithParameter:");
