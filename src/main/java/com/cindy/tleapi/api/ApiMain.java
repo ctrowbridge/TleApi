@@ -97,8 +97,25 @@ public class ApiMain {
             logger.info("ApiMain::createPostRoute:  line2 = \"" + line2 + "\"");
             logger.info("ApiMain::createPostRoute:  line3 = \"" + line3 + "\"");
 
+            if (line1 == null) {
+                logger.info("ApiMain::createPostRoute:  line1 is null");
+                ctx.result("line1 is null").status(404);
+                return;
+            }
+            if (line2 == null) {
+                logger.info("ApiMain::createPostRoute:  line2 is null");
+                ctx.result("line2 is null").status(404);
+                return;
+            }
+            if (line3 == null) {
+                logger.info("ApiMain::createPostRoute:  line3 is null");
+                ctx.result("line3 is null").status(404);
+                return;
+            }
+
             String resultStr = "";
             int statusCode = 0;
+
             TwoLineElementSet postElementSet = new TwoLineElementSet();
             try {
                 postElementSet.importElset(line1, line2, line3);

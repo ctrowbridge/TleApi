@@ -1,18 +1,11 @@
 package com.cindy.tleapi.restassured;
 
-//import com.cindy.tleapi.astro.TwoLineElementSet;
-
-
 import static io.restassured.RestAssured.*;
-import static io.restassured.matcher.RestAssuredMatchers.*;
 
 import io.restassured.config.RestAssuredConfig;
-import io.restassured.http.ContentType;
 import io.restassured.http.Headers;
 import io.restassured.response.*;
-import io.restassured.response.ResponseBody;
 
-import org.jetbrains.annotations.TestOnly;
 import org.testng.annotations.Test;
 import java.util.concurrent.TimeUnit;
 
@@ -148,5 +141,113 @@ public class TestTleApi {
                 get("http://localhost:8981/elsets").
                 timeIn(TimeUnit.MILLISECONDS);
 
-        System.out.println("Response time = " + timeinMilliseconds + " ms");}
+        System.out.println("Response time = " + timeinMilliseconds + " ms");
+    }
+
+    @Test
+    public void post() {
+
+        System.out.println("TestTleAPI::post:");
+
+        Response response =
+                when().
+                        post("http://localhost:8981/elsets/" +
+                                "?line1=TEMPSAT 1              "+
+                                "&line2=1 00900U 64063C   20199.53174448  .00000207  00000-0  21239-3 0  9994"+
+                                "&line3=2 00900  90.1522  28.8730 0026176 330.4877  57.3871 13.73393904774586").
+                        then().
+                        contentType("text/plain").
+                        statusCode(200).
+                        extract().
+                        response();
+
+        Headers headers = response.headers();
+        System.out.println("TestTleAPI::post: headers = \"" + headers + "\"");
+        response.prettyPrint();
+    }
+
+    @Test
+    public void postWithBadLineNumber() {
+
+        System.out.println("TestTleAPI::postWithBadLineNumber:");
+
+        Response response =
+                when().
+                        post("http://localhost:8981/elsets/" +
+                                "?line1=TEMPSAT 1              "+
+                                "&line2=7 00900U 64063C   20199.53174448  .00000207  00000-0  21239-3 0  9994"+
+                                "&line3=2 00900  90.1522  28.8730 0026176 330.4877  57.3871 13.73393904774586").
+                        then().
+                        contentType("text/plain").
+                        statusCode(404).
+                        extract().
+                        response();
+
+        Headers headers = response.headers();
+        System.out.println("TestTleAPI::postWithBadLineNumber: headers = \"" + headers + "\"");
+        response.prettyPrint();
+    }
+
+    @Test
+    public void postWithMissingLine1() {
+
+        System.out.println("TestTleAPI::postWithMissingLine1:");
+
+        Response response =
+                when().
+                        post("http://localhost:8981/elsets/" +
+                                "?line2=7 00900U 64063C   20199.53174448  .00000207  00000-0  21239-3 0  9994"+
+                                "&line3=2 00900  90.1522  28.8730 0026176 330.4877  57.3871 13.73393904774586").
+                        then().
+                        contentType("text/plain").
+                        statusCode(404).
+                        extract().
+                        response();
+
+        Headers headers = response.headers();
+        System.out.println("TestTleAPI::postWithMissingLine1: headers = \"" + headers + "\"");
+        response.prettyPrint();
+    }
+
+    @Test
+    public void postWithMissingLine2() {
+
+        System.out.println("TestTleAPI::postWithMissingLine2:");
+
+        Response response =
+                when().
+                        post("http://localhost:8981/elsets/" +
+                                "?line1=TEMPSAT 1              " +
+                                "&line3=2 00900  90.1522  28.8730 0026176 330.4877  57.3871 13.73393904774586").
+                        then().
+                        contentType("text/plain").
+                        statusCode(404).
+                        extract().
+                        response();
+
+        Headers headers = response.headers();
+        System.out.println("TestTleAPI::postWithMissingLine2: headers = \"" + headers + "\"");
+        response.prettyPrint();
+    }
+
+    @Test
+    public void postWithMissingLine3() {
+
+        System.out.println("TestTleAPI::postWithMissingLine3:");
+
+        Response response =
+                when().
+                        post("http://localhost:8981/elsets/" +
+                                "?line1=TEMPSAT 1              " +
+                                "&line2=7 00900U 64063C   20199.53174448  .00000207  00000-0  21239-3 0  9994").
+                        then().
+                        contentType("text/plain").
+                        statusCode(404).
+                        extract().
+                        response();
+
+        Headers headers = response.headers();
+        System.out.println("TestTleAPI::postWithMissingLine3: headers = \"" + headers + "\"");
+        response.prettyPrint();
+    }
 }
