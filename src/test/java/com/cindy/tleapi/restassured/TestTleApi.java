@@ -49,7 +49,7 @@ public class TestTleApi {
         then().
             assertThat().
             statusCode(400);
-}
+    }
 
     @Test
     public void getElsetSatnoNotFound() {
