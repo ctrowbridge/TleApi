@@ -9,11 +9,19 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
+/**
+ * Handlers for ApiMain
+ */
 public class ElsetController {
 
     private static List<TwoLineElementSet> elsets;
     private static final Logger logger = LogManager.getLogger();
 
+    /**
+     * Loads data from database
+     *
+     * @throws Exception
+     */
     public static void loadData() throws Exception {
 
         logger.info("ElsetController::loadData:");
@@ -40,6 +48,7 @@ public class ElsetController {
         tledb.open();
         boolean exists = tledb.ifElsetExists(satno);
         if (!exists) {
+
             resultStr = "element set " + satno + " doesn't exist";
             statusCode = 404;
             logger.error(resultStr);
@@ -69,36 +78,23 @@ public class ElsetController {
         String line2 = ctx.queryParam("line2");
         String line3 = ctx.queryParam("line3");
 
-        logger.info("ElsetController::postElset:  line1 = \"" + line1 + "\"");
-        logger.info("ElsetController::postElset:  line2 = \"" + line2 + "\"");
-        logger.info("ElsetController::postElset:  line3 = \"" + line3 + "\"");
-
-        if (line1 == null) {
-            logger.info("ElsetController::postElset:  line1 is null");
-            ctx.result("line1 is null").status(404);
-            return;
-        }
-        if (line2 == null) {
-            logger.info("ElsetController::postElset:  line2 is null");
-            ctx.result("line2 is null").status(404);
-            return;
-        }
-        if (line3 == null) {
-            logger.info("ElsetController::postElset:  line3 is null");
-            ctx.result("line3 is null").status(404);
+        String msg = checkLines(line1, line2, line3);
+        if (msg != null) {
+            ctx.result(msg).status(404);
             return;
         }
 
         String resultStr = "";
         int statusCode = 0;
 
+        TleDb tledb = new TleDb();
+        tledb.open();
+
         TwoLineElementSet postElementSet = new TwoLineElementSet();
         try {
             postElementSet.importElset(line1, line2, line3);
             logger.info("ElsetController::postElset:  postElementSet = " + postElementSet);
 
-            TleDb tledb = new TleDb();
-            tledb.open();
             boolean exists = tledb.ifElsetExists(postElementSet.getSatelliteNumber());
             logger.info("ElsetController::postElset:  exists = " + exists);
 
@@ -109,7 +105,7 @@ public class ElsetController {
                 statusCode = 200;
             } else {
                 logger.info("ElsetController::postElset:  elset already exists ...");
-                resultStr = "elset " + postElementSet.getSatelliteNumber() + " alread exists!";
+                resultStr = "elset " + postElementSet.getSatelliteNumber() + " already exists!";
                 statusCode = 400;
             }
             tledb.close();
@@ -121,6 +117,7 @@ public class ElsetController {
 
             resultStr = exp.getDescription();
             statusCode = 404;
+            tledb.close();
         }
 
         logger.info("ElsetController::postElset:  resultStr = " + resultStr + ", statusCode = " + statusCode);
@@ -128,16 +125,35 @@ public class ElsetController {
 
     };
 
+    private static String checkLines(String line1, String line2, String line3) {
+
+        logger.info("ElsetController::postElset:  line1 = \"" + line1 + "\"");
+        logger.info("ElsetController::postElset:  line2 = \"" + line2 + "\"");
+        logger.info("ElsetController::postElset:  line3 = \"" + line3 + "\"");
+
+        if (line1 == null) {
+            logger.info("ElsetController::postElset:  line1 is null");
+            return "line1 is null";
+        }
+        if (line2 == null) {
+            logger.info("ElsetController::postElset:  line2 is null");
+            return "line2 is null";
+        }
+        if (line3 == null) {
+            logger.info("ElsetController::postElset:  line3 is null");
+            return "line3 is null";
+        }
+        return null;
+    }
+
+    /**
+     * Handler for GET (all elsets)
+     */
     public static Handler getElset = ctx -> {
 
         logger.info("ElsetController::getElset:  get called");
 
-        String resultStr = "[\n\t";
-        for (TwoLineElementSet elset : elsets) {
-            resultStr = resultStr + elset.toJson() + ",\n";
-        }
-        resultStr = resultStr.substring(0, resultStr.length()-2);
-        resultStr = resultStr + "\n]";
+        String resultStr = formatElsets(elsets);
         ctx.contentType("application/json");
         ctx.header("Access-Control-Allow-Origin",
                 "*");
@@ -146,6 +162,20 @@ public class ElsetController {
         ctx.result(resultStr);
     };
 
+    private static String formatElsets(List<TwoLineElementSet> elsets) {
+
+        String resultStr = "[\n\t";
+        for (TwoLineElementSet elset : elsets) {
+            resultStr = resultStr + elset.toJson() + ",\n";
+        }
+        resultStr = resultStr.substring(0, resultStr.length()-2);
+        resultStr = resultStr + "\n]";
+        return resultStr;
+    }
+
+    /**
+     * Handler for GET (with parameters)
+     */
     public static Handler getElsetWithParameters = ctx -> {
 
         logger.info("ElsetController::getElsetWithParameters:  get called");
@@ -176,7 +206,8 @@ public class ElsetController {
             logger.info("ElsetController::getElsetWithParameters:  statusCode = " + statusCode);
             ctx.contentType("application/json");
             ctx.header("Access-Control-Allow-Origin", "*");
-            ctx.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, ContentType, Accept");
+            ctx.header("Access-Control-Allow-Headers",
+                    "Origin, X-Requested-With, ContentType, Accept");
             ctx.result(resultStr).status(statusCode);
 
         } catch (Exception exp) {
