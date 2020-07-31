@@ -28,14 +28,14 @@ public class TestTleApi {
     public void getElsetsReturnsStatusCode200() {
 
         System.out.println("TestTleAPI::getElsetsReturnsStatusCode200:");
-            given().
-                log().all().
-            when().
-                get("http://localhost:8981/elsets").
-            then().
-                log().body().
-                assertThat().
-                statusCode(200);
+        given().
+            log().all().
+        when().
+            get("http://localhost:8981/elsets").
+        then().
+            log().body().
+            assertThat().
+            statusCode(200);
     }
 
     @Test
