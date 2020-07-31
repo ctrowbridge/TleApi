@@ -24,7 +24,7 @@ public class ApiMain {
 
     /**
      * Main app for the API.  Uses Javalin to create an REST API with
-     * the following endpoints:  GET, GET with parameters, POST
+     * the following endpoints:  GET all, GET one elset, POST, DELETE
      *
      * @param args Input arguments. Not currently used.
      */

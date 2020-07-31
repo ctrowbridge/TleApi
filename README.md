@@ -71,6 +71,12 @@ http://localhost:8981/elsets
 
 Retrieves a list of all elsets in the TLE database.
 
+http://localHost:8981/elsets?page=2&pageSize=20
+
+Retrieves a list of all elsets in the TLE database on the given page, with the given page size.
+'page' starts at 1 and must be > 1, with default = 1.
+'pageSize' must be > 1, with default = 20.
+
 ## List one Element Set
 http://localhost:8981/elsets/<num>
 

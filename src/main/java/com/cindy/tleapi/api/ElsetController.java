@@ -4,6 +4,7 @@ import com.cindy.tleapi.astro.AstroException;
 import com.cindy.tleapi.astro.TwoLineElementSet;
 import com.cindy.tleapi.db.TleDb;
 import io.javalin.http.Handler;
+import io.javalin.http.Context;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -153,7 +154,13 @@ public class ElsetController {
 
         logger.info("ElsetController::getElset:  get called");
 
-        String resultStr = formatElsets(elsets);
+        int page = getIntParameter(ctx, "page", 1);
+        int pageSize = getIntParameter(ctx, "pageSize", 20);
+        if (page == -1 || pageSize == -1) {
+            return;
+        }
+
+        String resultStr = formatElsets(elsets, page, pageSize);
         ctx.contentType("application/json");
         ctx.header("Access-Control-Allow-Origin",
                 "*");
@@ -162,11 +169,42 @@ public class ElsetController {
         ctx.result(resultStr);
     };
 
-    private static String formatElsets(List<TwoLineElementSet> elsets) {
+    private static int getIntParameter(Context ctx, String name, int defaultValue) {
+
+        int param = defaultValue;
+        String paramStr = ctx.queryParam(name);
+        if (paramStr != null) {
+            try {
+                param = Integer.parseInt(paramStr);
+            } catch (Exception exp) {
+                ctx.result(exp.getMessage() + " - '" + name + "' must be an integer!").status(404);;
+                return -1;
+            }
+        }
+
+        if (param < 1) {
+            ctx.result("'" + name + "' must be greater than 0!").status(404);;
+            return -1;
+        }
+        return param;
+    }
+
+    private static String formatElsets(List<TwoLineElementSet> elsets, int page, int pageSize) {
+
+        logger.info("ElsetController::formatElsets:  page = " + page + ", pageSize = " + pageSize);
 
         String resultStr = "[\n\t";
+        int count = 1;
+        int pageCount = 1;
         for (TwoLineElementSet elset : elsets) {
-            resultStr = resultStr + elset.toJson() + ",\n";
+            if (count <= pageSize && pageCount == page) {
+                resultStr = resultStr + elset.toJson() + ",\n";
+            }
+            count++;
+            if (count > pageSize) {
+                pageCount++;
+                count = 1;
+            }
         }
         resultStr = resultStr.substring(0, resultStr.length()-2);
         resultStr = resultStr + "\n]";
