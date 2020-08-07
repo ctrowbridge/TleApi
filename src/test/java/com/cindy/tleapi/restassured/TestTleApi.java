@@ -131,6 +131,40 @@ public class TestTleApi {
     }
 
     @Test
+    public void getEpoch() {
+
+        // GOES 1 (SMS-C) [-]
+        // 1 08366U 75100A   20187.39455867 -.00000161  00000-0  00000+0 0  9999
+        // 2 08366   9.9188 304.7684 0001180 336.6645  51.3076  1.00232982163420
+
+        System.out.println("TestTleAPI::getEpoch:");
+
+        Response response =
+                when().
+                        get("http://localhost:8981/epoch/8366").
+                        then().
+                        contentType("application/json").
+                        statusCode(200).
+                        body("satelliteNumber", equalTo(8366)).
+                        body("epochYear", equalTo(20)).
+                        body("epochDay", equalTo(187.39455867f)).
+                        body("epoch", equalTo("2020-07-05T09:28:09.869")).
+                        extract().
+                        response();
+
+        System.out.println("TestTleAPI::getEpoch: response   = " + response);
+        response.prettyPrint();
+        System.out.println("TestTleAPI::getEpoch: statusLine = \"" +
+                response.statusLine() + "\"");
+
+        String contentType = response.contentType();
+        System.out.println("TestTleAPI::getEpoch: contentType = \"" + contentType + "\"");
+
+        Headers headers = response.headers();
+        System.out.println("TestTleAPI::getEpoch: headers = \"" + headers + "\"");
+    }
+
+    @Test
     public void measureResponseTimeInMilliSeconds() {
 
         System.out.println("TestTleAPI::measureResponseTimeInMilliSeconds:");

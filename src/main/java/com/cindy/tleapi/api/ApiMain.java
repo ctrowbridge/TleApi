@@ -94,5 +94,7 @@ public class ApiMain {
         logger.info("ApiMain::createGetRouteWithParameter:");
 
         app.get("/elsets/:satno", ElsetController.getElsetWithParameters);
+
+        app.get("/epoch/:satno", ElsetController.getEpochWithParameters);
     }
 }

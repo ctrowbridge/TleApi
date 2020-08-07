@@ -455,6 +455,30 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "GET epoch",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://localhost:8981/epoch/8366",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8981",
+					"path": [
+						"epoch",
+						"8366"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }

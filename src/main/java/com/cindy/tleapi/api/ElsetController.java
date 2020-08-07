@@ -1,6 +1,7 @@
 package com.cindy.tleapi.api;
 
 import com.cindy.tleapi.astro.AstroException;
+import com.cindy.tleapi.astro.Epoch;
 import com.cindy.tleapi.astro.TwoLineElementSet;
 import com.cindy.tleapi.db.TleDb;
 import io.javalin.http.Handler;
@@ -242,6 +243,53 @@ public class ElsetController {
                 statusCode = 404;
             }
             logger.info("ElsetController::getElsetWithParameters:  statusCode = " + statusCode);
+            ctx.contentType("application/json");
+            ctx.header("Access-Control-Allow-Origin", "*");
+            ctx.header("Access-Control-Allow-Headers",
+                    "Origin, X-Requested-With, ContentType, Accept");
+            ctx.result(resultStr).status(statusCode);
+
+        } catch (Exception exp) {
+            String resultStr = "satno parameter not an integer ";
+            resultStr += exp.getMessage();
+            ctx.result(resultStr).status(400);
+        }
+    };
+
+    public static Handler getEpochWithParameters = ctx -> {
+
+        logger.info("ElsetController::getEpochWithParameters:  get called");
+
+        int satno = -1;
+        try {
+            int statusCode = 200;
+            boolean found = false;
+            satno = Integer.parseInt(ctx.pathParam("satno"));
+            logger.info("ElsetController::getEpochWithParameters:  satno = " + satno);
+
+            String resultStr = "";
+            for (TwoLineElementSet elset : elsets) {
+                if (elset.getSatelliteNumber() == satno) {
+                    Epoch epoch = new Epoch(elset.getEpochYear()+2000, elset.getEpochDay());
+                    resultStr = "{\n" +
+                            "\t\"satelliteNumber\": " + elset.getSatelliteNumber() +
+                            ",\n\t\"epochYear\": " + elset.getEpochYear() +
+                            ",\n\t\"epochDay\": " + elset.getEpochDay() +
+                            ",\n\t\"epoch\": \"" + epoch.toString() + "\"" +
+                            "\n}";
+                    found = true;
+                    logger.info("ElsetController::getEpochWithParameters:  found = " + found + "\n " + resultStr);
+                    break;
+                }
+            }
+
+            if (!found) {
+                logger.info("ElsetController::getEpochWithParameters:  not found = " + found);
+
+                resultStr = "Satellite number " + satno + " not found";
+                statusCode = 404;
+            }
+            logger.info("ElsetController::getEpochWithParameters:  statusCode = " + statusCode);
             ctx.contentType("application/json");
             ctx.header("Access-Control-Allow-Origin", "*");
             ctx.header("Access-Control-Allow-Headers",
